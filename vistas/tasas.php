@@ -30,9 +30,13 @@ if ($_SESSION['tasas']==1)
                         <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
                           <thead>
                             <th>Opciones</th>
+                            <th>Pais origen</th>
+                            <th>Pais destino</th>
                             <th>Descripción</th>
                             <th>[Monto inicial</th>
                             <th>Monto tope]</th>
+                            <th>Monto KILO</th>
+                            <th>Monto SOBRE</th>
                             <th>Comisión</th>
                             <th>Fecha</th>
                             <th>Creado por</th>
@@ -41,9 +45,13 @@ if ($_SESSION['tasas']==1)
                           </tbody>
                           <tfoot>
                             <th>Opciones</th>
+                            <th>Pais origen</th>
+                            <th>Pais destino</th>
                             <th>Descripción</th>
-                            <th>Monto inicial</th>
-                            <th>Monto tope</th>
+                            <th>[Monto inicial</th>
+                            <th>Monto tope]</th>
+                            <th>Monto KILO</th>
+                            <th>Monto SOBRE</th>
                             <th>Comisión</th>
                             <th>Fecha</th>
                             <th>Creado por</th>
@@ -69,6 +77,24 @@ if ($_SESSION['tasas']==1)
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Comisión *:</label>
                             <input type="text" class="form-control" name="comisiont" id="comisiont" maxlength="20" placeholder="Comisión por envio" required>
+                          </div>
+                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label>Monto por KILO :</label>
+                            <input type="text" class="form-control" name="MontoKILO" id="MontoKILO" maxlength="20" placeholder="Monto fijo por KILO" required>
+                          </div>
+                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label>Monto por SOBRE :</label>
+                            <input type="text" class="form-control" name="MontoSOBRE" id="MontoSOBRE" maxlength="20" placeholder="Monto fijo por SOBRE" required>
+                          </div>
+                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label>Pais origen(*):</label>
+                            <select class="form-control selectpicker" data-live-search="true" name="pais_origen" id="pais_origen" required>
+                            </select>
+                          </div>
+                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label>Pais destino(*):</label>
+                            <select class="form-control selectpicker" data-live-search="true" name="pais_destino" id="pais_destino" required>
+                            </select>
                           </div>
                           <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn btn-success" type="submit" id="btnGuardar"><i class="fa fa-save"></i> Guardar</button>

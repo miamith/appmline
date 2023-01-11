@@ -5,7 +5,7 @@
       Version 1.0
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2019 <a href="#">Ecuatur</a>.</strong> Todos los derechos reservados.
+    <strong>Copyright &copy; 2023 <a href="#">M-line</a>.</strong> Todos los derechos reservados.
   </footer>
 
   <!-- Control Sidebar -->

@@ -78,9 +78,17 @@ Class Usuario
 		//Implementar un método para listar los registros y mostrar en el select
 	public function selectEmpleado()
 	{
-		$sql="SELECT idempleado,ap,(select nomcompleto from remitentes r WHERE r.DNIremitente=DNI) as nomcompleto FROM empleados";
+		$sql="SELECT idempleado,ap,DNI,(select nomcompleto from remitentes r WHERE r.DNIremitente=DNI) as nomcompleto FROM empleados";
 		return ejecutarConsulta($sql);		
 	}
+		//Implementar un método para listar los registros y mostrar en el select
+	public function generarNCPagencia($responsable)
+	{
+		$sql="SELECT idempleado,ap,DNI FROM empleados WHERE ap='$responsable'";
+
+		return ejecutarConsultaSimpleFila($sql);		
+	}
+	
 
 		//Función para verificar el acceso al sistema
 	public function verificar($ap,$password)

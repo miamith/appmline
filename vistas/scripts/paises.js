@@ -9,34 +9,24 @@ function init() {
         guardaryeditar(e);
     });
 
-    //Cargamos los items al select agencia 
-    $.post("../ajax/ajax_billete.php?op=selectAgencia", function(r) {
-        $("#agencia").html(r);
-        $('#agencia').selectpicker('refresh');
-
-    });
-    //Cargamos los items al select ruta
-    $.post("../ajax/ajax_billete.php?op=selectRuta", function(r) {
-        $("#ruta").html(r);
-        $('#ruta').selectpicker('refresh');
-    });
-
 }
 
 //Función limpiar
 function limpiar() {
 
-    $("#idbillete").val("");
-    $("#company").val("");
-    $("#fechaemision").val("");
-    $("#fesali").val("");
-    $("#fevuel").val("");
-    $("#numvuel").val("");
-    $("#nompasa").val("");
-    $("#DNIremitente").val("");
-    $("#localiz").val("");
-    $("#precio").val("");
+    $("#idpais").val("");
+    $("#nompais").val("");
     $("#descripcion").val("");
+    $("#limienviolocal").val("");
+    $("#limienvioint").val("");
+    $("#moneda").val("");
+    $("#iva").val("");
+    $("#porcenenvio").val("");
+    $("#porcenrecibir").val("");
+    $("#porcenenviopaq").val("");
+    $("#porcenrecibirpaq").val("");
+    $("#partnerapi").val("");
+
 }
 
 //Función mostrar formulario
@@ -73,7 +63,7 @@ function listar() {
             'pdf'
         ],
         "ajax": {
-            url: '../ajax/ajax_billete.php?op=listar',
+            url: '../ajax/ajax_pais.php?op=listar',
             type: "get",
             dataType: "json",
             error: function(e) {
@@ -83,7 +73,7 @@ function listar() {
         "bDestroy": true,
         "iDisplayLength": 10, //Paginación
         "order": [
-                [12, "desc"]
+                [2, "desc"]
             ] //Ordenar (columna,orden)
     }).DataTable();
 }
@@ -95,7 +85,7 @@ function guardaryeditar(e) {
     var formData = new FormData($("#formulario")[0]);
 
     $.ajax({
-        url: "../ajax/ajax_billete.php?op=guardaryeditar",
+        url: "../ajax/ajax_pais.php?op=guardaryeditar",
         type: "POST",
         data: formData,
         contentType: false,
@@ -111,36 +101,33 @@ function guardaryeditar(e) {
     limpiar();
 }
 
-function mostrar(idbillete) {
-    $.post("../ajax/ajax_billete.php?op=mostrar", { idbillete: idbillete }, function(data, status) {
+function mostrar(idpais) {
+    $.post("../ajax/ajax_pais.php?op=mostrar", { idpais: idpais }, function(data, status) {
         data = JSON.parse(data);
         mostrarform(true);
 
-        $("#idbillete").val(data.idbillete);
-        $("#company").val(data.company);
-        $("#fechaemision").val(data.fechaemision);
-        $("#fesali").val(data.fesali);
-        $("#fevuel").val(data.fevuel);
-        $("#numvuel").val(data.numvuel);
-        $("#DNIremitente").val(data.DNIremitente);
-        $("#nompasa").val(data.nomcompleto);
-        $("#ruta").val(data.ruta);
-        $("#ruta").selectpicker('refresh');
-        $("#agencia").val(data.agencia);
-        $("#agencia").selectpicker('refresh');
-        $("#localiz").val(data.localiz);
-        $("#precio").val(data.precio);
+        $("#idpais").val(data.idPais);
+        $("#nompais").val(data.nombre);
         $("#descripcion").val(data.descripcion);
+        $("#limitenviolocal").val(data.limite_envioLOCAL);
+        $("#limitenvioint").val(data.limite_envioINT);
+        $("#moneda").val(data.moneda);
+        $("#iva").val(data.IVA);
+        $("#porcenenvio").val(data.porcenENVIO);
+        $("#porcenrecibir").val(data.porcenRECIBIR);
+        $("#porcenenviopaq").val(data.porcenENVIO_PAQ);
+        $("#porcenrecibirpaq").val(data.porcenRECI_PAQ);
+        $("#partnerapi").val(data.partnerAPI);
 
     });
 }
 
 
 //Función para eliminar registros
-function eliminar(idbillete) {
-    bootbox.confirm("¿Está Seguro de eliminar el billete?", function(result) {
+function eliminar(idpais) {
+    bootbox.confirm("¿Está Seguro de eliminar el pais?", function(result) {
         if (result) {
-            $.post("../ajax/ajax_billete.php?op=eliminar", { idbillete: idbillete }, function(e) {
+            $.post("../ajax/ajax_pais.php?op=eliminar", { idpais: idpais }, function(e) {
                 bootbox.alert(e);
                 tabla.ajax.reload();
             });

@@ -7,10 +7,14 @@ $consulta=new Empleado();
 $idempleado=isset($_POST["idempleado"])? limpiarCadena($_POST["idempleado"]):"";
 $ap=isset($_POST["ap"])? limpiarCadena($_POST["ap"]):"";
 $cargo=isset($_POST["cargo"])? limpiarCadena($_POST["cargo"]):"";
+$rol=isset($_POST["rol"])? limpiarCadena($_POST["rol"]):"";
 $salario=isset($_POST["salario"])? limpiarCadena($_POST["salario"]):"";
-$nombre=isset($_POST["nombre"])? limpiarCadena($_POST["nombre"]):"";
+$nomcompleto=isset($_POST["nomcompleto"])? limpiarCadena($_POST["nomcompleto"]):"";
 $tel=isset($_POST["tel"])? limpiarCadena($_POST["tel"]):"";
+$pais=isset($_POST["pais"])? limpiarCadena($_POST["pais"]):"";
+$ciudad=isset($_POST["ciudad"])? limpiarCadena($_POST["ciudad"]):"";
 $direccion=isset($_POST["direccion"])? limpiarCadena($_POST["direccion"]):"";
+$interno=isset($_POST["interno"])? limpiarCadena($_POST["interno"]):"";
 $DNIremitente=isset($_POST["DNIremitente"])? limpiarCadena($_POST["DNIremitente"]):"";
 $feinicioempleo=isset($_POST["feinicioempleo"])? limpiarCadena($_POST["feinicioempleo"]):"";
 $agenciaA=isset($_POST["agenciaA"])? limpiarCadena($_POST["agenciaA"]):"";
@@ -18,11 +22,12 @@ $agenciaA=isset($_POST["agenciaA"])? limpiarCadena($_POST["agenciaA"]):"";
 switch ($_GET["op"]){
 	case 'guardaryeditar':
 		if (empty($idempleado)){
-			$rspta=$consulta->insertar($DNIremitente,$nombre,$tel,$direccion,$_SESSION['ap'],$ap,$cargo,$salario,$feinicioempleo,$agenciaA);
-			echo $rspta ? "Empleado registrado" : "Empleado no se pudo registrar";
+			$rspta=$consulta->insertar($ap,$DNIremitente,$cargo,$rol,$salario,$agenciaA,$pais,$ciudad,$interno,$_SESSION['ap'],$feinicioempleo,$nomcompleto,$tel,$direccion);
+			echo $rspta ? "Empleado registrado" : "xxxxEmpleado no se pudo registrar";
 		}
 		else {
-			$rspta=$consulta->editar($idempleado,$ap,$DNIremitente,$cargo,$salario,$_SESSION['ap'],$nombre,$tel,$direccion,$feinicioempleo,$agenciaA);
+			$rspta=$consulta->editar($idempleado,$ap,$DNIremitente,$cargo,$rol,$salario,$agenciaA,$pais,$ciudad,$interno,
+			$_SESSION['ap'],$feinicioempleo,$nomcompleto,$tel,$direccion);
 			echo $rspta ? "Empleado actualizado" : "Empleado no se pudo actualizar";
 		}
 	break;
@@ -51,13 +56,17 @@ switch ($_GET["op"]){
  				"2"=>$reg->DNI,
  				"3"=>$reg->tel,
  				"4"=>$reg->cargo,
- 				"5"=>$reg->salario,
- 				"6"=>$reg->ap,
- 				"7"=>$reg->direccion,
- 				"8"=>$reg->agecrea,
- 				"9"=>$reg->fecrea,
- 				"10"=>$reg->feinicioempleo,
- 				"11"=>$reg->femod
+				"5"=>$reg->rol,
+ 				"6"=>$reg->salario,
+ 				"7"=>$reg->ap,
+				"8"=>$reg->pais_nombre,
+ 				"9"=>$reg->ciudad,
+				"10"=>$reg->direccion,
+				"11"=>$reg->interno,
+				"12"=>$reg->agenciaA,
+ 				"13"=>$reg->agecrea,
+ 				"14"=>$reg->fecrea,
+ 				"15"=>$reg->feinicioempleo
 
  				);
  		}

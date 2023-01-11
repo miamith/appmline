@@ -14,7 +14,7 @@ Class Persona
 		 $key = '';
 		 $pattern = '123Z4S5V6L7Q8M90ABCDEFGHIJKLMNOPQRSTVWYZ';
 		 $max = strlen($pattern)-1;
-		 for($i=0;$i < $longitud;$i++) $key .= $pattern{mt_rand(0,$max)};
+		 //for($i=0;$i < $longitud;$i++) $key .= $pattern{mt_rand(0,$max)};
 		 return $key;
 		}
 	//Implementamos un método para insertar registros
@@ -145,7 +145,7 @@ Class Persona
 		//Implementar un método para listar los registros y mostrar en el select
 	public function selectAgencias()
 	{
-		$sql="SELECT * FROM agencias";
+		$sql="SELECT * FROM agencias WHERE eliminado=0";
 		return ejecutarConsulta($sql);		
 	}
 

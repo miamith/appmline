@@ -74,7 +74,7 @@ switch ($_GET["op"]){
 				{
 					echo '<option value=' . $reg->idempleado . '>' . $reg->ap . '-' . $reg->nomcompleto . '</option>';
 				}
-	break;
+		break;
 	
 		case 'permisos':
 		//Obtenemos todos los permisos de la tabla permisos
@@ -118,6 +118,7 @@ switch ($_GET["op"]){
 	    {
 	        //Declaramos las variables de sesión
 	        $_SESSION['idempleado']=$fetch->idempleado;
+			$_SESSION['DNI']=$fetch->DNI;
 	        $_SESSION['nomcompleto']=$fetch->nomcompleto;
 	        $_SESSION['ap']=$fetch->ap;
 	        $_SESSION['tel']=$fetch->tel;
@@ -151,6 +152,7 @@ switch ($_GET["op"]){
 			in_array(11,$valores)?$_SESSION['usuarios']=1:$_SESSION['usuarios']=0;
 			in_array(12,$valores)?$_SESSION['contabilidad']=1:$_SESSION['contabilidad']=0;
 			in_array(13,$valores)?$_SESSION['acceso']=1:$_SESSION['acceso']=0;
+			in_array(14,$valores)?$_SESSION['paises']=1:$_SESSION['paises']=0;
 
 
 	    }

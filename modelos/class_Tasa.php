@@ -11,16 +11,24 @@ Class Tasa
 	}
 
 	//Implementamos un método para insertar registros
-	public function insertar($Descripcion,$Monto1,$Monto2,$comisiont,$agente)
+	public function insertar($pais_origen,$pais_destino,$Descripcion,$Monto1,$Monto2,$comisiont,$MontoKILO,$MontoSOBRE,$agente)
 	{
-		$sql="INSERT INTO tasas VALUES (NULL,'$Descripcion','$Monto1','$Monto2','$comisiont',now(),'$agente')";
+		
+		$sql="INSERT INTO tasas (`idTasas`, `pais_origen`, `pais_destino`, `Descripcion`,
+		                         `Monto1`, `Monto2`, `MontoKILO`, `MontoSOBRE`, `comisiont`,
+								  `fecreat`,`agencrea`) 
+					 VALUES (NULL,'$pais_origen','$pais_destino','$Descripcion','$Monto1','$Monto2',
+					         '$MontoKILO','$MontoSOBRE','$comisiont',now(),'$agente')";
 		return ejecutarConsulta($sql);
 	}
 
 	//Implementamos un método para editar registros
-	public function editar($idTasas,$Descripcion,$Monto1,$Monto2,$comisiont)
+	public function editar($idTasas,$pais_origen,$pais_destino,$Descripcion,$Monto1,$Monto2,$MontoKILO,$MontoSOBRE,$comisiont,$agente)
 	{
-		$sql="UPDATE tasas SET Descripcion='$Descripcion',Monto1='$Monto1',Monto2='$Monto2',comisiont='$comisiont' WHERE idTasas='$idTasas'";
+		$sql="UPDATE tasas SET pais_origen='$pais_origen',pais_destino='$pais_destino',Descripcion='$Descripcion',
+		                       Monto1='$Monto1',Monto2='$Monto2',MontoKILO='$MontoKILO',MontoSOBRE='$MontoSOBRE',
+							   comisiont='$comisiont',agenmodif='$agente' 
+							   WHERE idTasas='$idTasas'";
 		return ejecutarConsulta($sql);
 	}
 
@@ -34,15 +42,24 @@ Class Tasa
 	//Implementar un método para mostrar los datos de un registro a modificar
 	public function mostrar($idTasas)
 	{
-		$sql="SELECT idTasas,Descripcion,Monto1,Monto2,comisiont FROM tasas WHERE idTasas='$idTasas'";
+		$sql="SELECT idTasas,pais_origen,pais_destino,Descripcion,Monto1,Monto2,MontoKILO,MontoSOBRE,comisiont FROM tasas WHERE idTasas='$idTasas'";
 		return ejecutarConsultaSimpleFila($sql);
 	}
 
 	//Implementar un método para listar los registros
 	public function listar()
 	{
-		$sql="SELECT idTasas,Descripcion,Monto1,Monto2,comisiont,fecreat,agencrea FROM tasas";
+		$sql="SELECT idTasas,(SELECT nombre FROM paises WHERE idPais=pais_origen) as pais_origenNOM,
+					(SELECT nombre FROM paises WHERE idPais=pais_destino) as pais_destinoNOM,
+					Descripcion,Monto1,Monto2,MontoKILO,MontoSOBRE,comisiont,fecreat,agencrea FROM tasas";
 		return ejecutarConsulta($sql);
+	}
+
+	//Implementar un método para listar los registros y mostrar en el select
+	public function selectPaises()
+	{
+		$sql="SELECT idPais, nombre,moneda FROM paises";
+		return ejecutarConsulta($sql);		
 	}
 
 

@@ -6,19 +6,23 @@ $tasa=new Tasa();
 
 
 $idTasas=isset($_POST["idTasas"])? limpiarCadena($_POST["idTasas"]):"";
+$pais_origen=isset($_POST["pais_origen"])? limpiarCadena($_POST["pais_origen"]):"";
+$pais_destino=isset($_POST["pais_destino"])? limpiarCadena($_POST["pais_destino"]):"";
 $Descripcion=isset($_POST["Descripcion"])? limpiarCadena($_POST["Descripcion"]):"";
 $Monto1=isset($_POST["Monto1"])? limpiarCadena($_POST["Monto1"]):"";
 $Monto2=isset($_POST["Monto2"])? limpiarCadena($_POST["Monto2"]):"";
 $comisiont=isset($_POST["comisiont"])? limpiarCadena($_POST["comisiont"]):"";
+$MontoKILO=isset($_POST["MontoKILO"])? limpiarCadena($_POST["MontoKILO"]):"";
+$MontoSOBRE=isset($_POST["MontoSOBRE"])? limpiarCadena($_POST["MontoSOBRE"]):"";
 
 switch ($_GET["op"]){
 	case 'guardaryeditar':
 		if (empty($idTasas)){
-			$rspta=$tasa->insertar($Descripcion,$Monto1,$Monto2,$comisiont,$_SESSION['ap']);
+			$rspta=$tasa->insertar($pais_origen,$pais_destino,$Descripcion,$Monto1,$Monto2,$MontoKILO,$MontoSOBRE,$comisiont,$_SESSION['ap']);
 			echo $rspta ? "Tasa registrada" : "Tasa no se pudo registrar";
 		}
 		else {
-			$rspta=$tasa->editar($idTasas,$Descripcion,$Monto1,$Monto2,$comisiont);
+			$rspta=$tasa->editar($idTasas,$pais_origen,$pais_destino,$Descripcion,$Monto1,$Monto2,$MontoKILO,$MontoSOBRE,$comisiont,$_SESSION['ap']);
 			echo $rspta ? "Tasa actualizada" : "Tasa no se pudo actualizar";
 		}
 	break;
@@ -43,12 +47,16 @@ switch ($_GET["op"]){
  			$data[]=array(
  				"0"=>'<a title="Eliminar" class="label bg-red" href="#" onclick="eliminar('.$reg->idTasas.')"><i class="fa fa-remove" ></i></a>'.
  					' <a title="Editar" href="#" onclick="mostrar('.$reg->idTasas.')"><i class="fa fa-edit"></i></a>',
- 				"1"=>$reg->Descripcion,
- 				"2"=>number_format($reg->Monto1, 0, '', '.'),
- 				"3"=>number_format($reg->Monto2, 0, '', '.'),
- 				"4"=>number_format($reg->comisiont, 0, '', '.'),
- 				"5"=>$reg->fecreat,
- 				"6"=>$reg->agencrea
+				"1"=>$reg->pais_origenNOM,
+				"2"=>$reg->pais_destinoNOM,
+				"3"=>$reg->Descripcion,
+ 				"4"=>number_format($reg->Monto1, 0, '', ','),
+ 				"5"=>number_format($reg->Monto2, 0, '', ','),
+				"6"=>number_format($reg->MontoKILO, 0, '', ','),
+				"7"=>number_format($reg->MontoSOBRE, 0, '', ','),
+ 				"8"=>number_format($reg->comisiont, 0, '', ','),
+ 				"9"=>$reg->fecreat,
+ 				"10"=>$reg->agencrea
  				);
  		}
  		$results = array(
@@ -59,5 +67,18 @@ switch ($_GET["op"]){
  		echo json_encode($results);
 
 	break;
+
+	case "selectPaises":
+		require_once "../modelos/class_Tasa.php";
+		$paises = new Tasa();
+
+		$rspta = $paises->selectPaises();
+
+		while ($reg = $rspta->fetch_object())
+				{
+					echo '<option value=' . $reg->idPais . '>' . $reg->nombre . ' ' . $reg->moneda. '</option>';
+				}
+	break;
+
 }
 ?>

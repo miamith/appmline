@@ -33,13 +33,17 @@ if ($_SESSION['empleados']==1)
                             <th>DNI</th>
                             <th>Tel</th>
                             <th>Cargo</th>
+                            <th>Rol acceso</th>
                             <th>Salario</th>
                             <th>Login</th>
+                            <th>Pais de trabajo</th>
+                            <th>Ciudad</th>
                             <th>Dirección</th>
+                            <th>Interno?</th>
+                            <th>Agencia</th>
                             <th>Creado</th>
                             <th>Fecha</th>
                             <th>Fecha reclutado</th>
-                            <th>Fecha modificacion</th>
                           </thead>
                           <tbody>                            
                           </tbody>
@@ -49,53 +53,83 @@ if ($_SESSION['empleados']==1)
                             <th>DNI</th>
                             <th>Tel</th>
                             <th>Cargo</th>
+                            <th>Rol acceso</th>
                             <th>Salario</th>
                             <th>Login</th>
+                            <th>Pais de trabajo</th>
+                            <th>Ciudad</th>
                             <th>Dirección</th>
+                            <th>Interno?</th>
+                            <th>Agencia</th>
                             <th>Creado</th>
                             <th>Fecha</th>
                             <th>Fecha reclutado</th>
-                            <th>Fecha modificación</th>
                           </tfoot>
                         </table>
                     </div>
 
                     <div class="panel-body" style="height: 400px;" id="formularioregistros">
                         <form name="formulario" id="formulario" method="POST">
-                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <label>Nombre (*)</label>
+                          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label>Nombre completo (*)</label>
                             <input type="hidden" name="idempleado" id="idempleado">
-                            <input type="text" class="form-control" name="nombre" id="nombre" maxlength="45" placeholder="Nombre del empleado" required>
+                            <input type="text" class="form-control" name="nomcompleto" id="nomcompleto" maxlength="55" placeholder="Nombre del empleado" required>
                           </div>
-                           <div class="form-group col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                           <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <label>DNI (*):</label>
                             <input type="text" class="form-control" name="DNIremitente" id="DNIremitente" maxlength="10" placeholder="DNI del empleado" required>
                           </div>
-                          <div class="form-group col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <label>Telefono:</label>
                             <input type="text" class="form-control" name="tel" id="tel" maxlength="22" placeholder="Telefono del empleado">
                           </div>
-                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <label>Cargo:</label>
+                           <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label>Funciones:</label>
                             <input type="text" class="form-control" name="cargo" id="cargo" maxlength="22" placeholder="Cargo del empleado">
                           </div>
-                          <div class="form-group col-lg-3 col-md-3 col-sm-3 col-xs-12" > 
+                          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12" > 
                             <label>Salario:</label>
                             <input type="text" class="form-control" name="salario" id="salario" maxlength="12" placeholder="Salario" required>
                           </div>
-                          <div class="form-group col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label>Rol (Tipo usuario):</label>
+                            <select  class="form-control selectpicker" data-live-search="true" name="rol" id="rol" >
+                                    <option value='Supervisor'>Supervisor</option>
+                                    <option value='Administrador'>Administrador</option>
+                                    <option value='CajeroUV'>Cajero UV</option>
+                                    <option value='Agencia'>Agencia</option>
+                                    <option value='Cajero'>Cajero</option>
+                            </select>
+                          </div>
+                          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <label>Login acceso:</label>
                             <input type="text" class="form-control" name="ap" id="ap" maxlength="8" placeholder="Login usuario, Ej. ap001531" required>
                           </div>
-                          <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label>Pais de trabajo:</label>
+                            <select  class="form-control selectpicker" data-live-search="true" name="pais" id="pais" required>
+                            </select>
+                          </div>
+                          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label>Ciudad:</label>
+                            <input type="text" class="form-control" name="ciudad" id="ciudad" maxlength="45" placeholder="Ciudad que vive" >
+                          </div>
+                          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <label>Dirección:</label>
                             <input type="text" class="form-control" name="direccion" id="direccion" maxlength="45" placeholder="Descripción" required>
                           </div>
-                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                            <label>Trabaja Interno?:</label>
+                            <select  class="form-control selectpicker" data-live-search="true" name="rol" id="rol" >
+                                    <option value='1'>Interno</option>
+                                    <option value='0'>Externo</option>
+                            </select>
+                          </div>
+                          <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <label>Fecha reclutado:</label>
                             <input type="date" class="form-control" name="feinicioempleo" id="feinicioempleo">
                           </div>
-                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                           <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <label>Agencia de trabajo:</label>
                             <select  class="form-control selectpicker" data-live-search="true" name="agenciaA" id="agenciaA" required>
                             </select>

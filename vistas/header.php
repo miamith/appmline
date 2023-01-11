@@ -7,7 +7,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>ECuatur APP SISTEMA</title>
+  <title>M-line APP SISTEMA</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <link rel="stylesheet" href="../public/dist/css/bootstrap.min.css">
@@ -54,11 +54,11 @@ desired effect
   <header class="main-header">
 
     <!-- Logo -->
-    <a href="index2.html" class="logo">
+    <a href="index.php" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>E</b>CT</span>
+      <span class="logo-mini"><b>M</b>LN</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Ecua</b>TUR</span>
+      <span class="logo-lg"><b>M-</b>Line</span>
     </a>
 
     <!-- Header Navbar -->
@@ -73,9 +73,10 @@ desired effect
           <!-- Messages: style can be found in dropdown.less-->
           <li class="dropdown messages-menu">
             <!-- Menu toggle button -->
+
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-envelope-o"></i>
-              <span class="label label-success">4</span>
+            <i class="fa fa-money"> 400.000</i>
+              <span class="label label-success">XAF</span>
             </a>
             <ul class="dropdown-menu">
               <li class="header">Tiene 4 mensajes</li>
@@ -86,7 +87,7 @@ desired effect
                     <a href="#">
                       <div class="pull-left">
                         <!-- User Image -->
-                        <img src="../public/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                        <img src="../public/dist/img/user2-160x160.jpg" class="img-circle" alt="Imagen Usuario">
                       </div>
                       <!-- Message title and timestamp -->
                       <h4>
@@ -171,14 +172,14 @@ desired effect
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
-              <img src="../public/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <img src="../public/dist/img/user2-160x160.jpg" class="user-image" alt="Imagen Usuario">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
               <span class="hidden-xs"><?php echo $_SESSION['nomcompleto']; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-                <img src="../public/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                <img src="../public/dist/img/user2-160x160.jpg" class="img-circle" alt="Imagen Usuario">
 
                 <p>
                   <?php echo $_SESSION['nomcompleto']; ?> - <?php echo $_SESSION['cargo']; ?>
@@ -228,7 +229,7 @@ desired effect
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="../public/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+          <img src="../public/dist/img/user2-160x160.jpg" class="img-circle" alt="Imagen Usuario">
         </div>
         <div class="pull-left info">
           <p><?php echo $_SESSION['nomcompleto']; ?></p>
@@ -258,6 +259,7 @@ desired effect
         <li><a href="recibos.php"><i class="fa fa-arrow-circle-o-down"></i> <span>Recibos</span></a></li>
         <li class=""><a href="billetes.php"><i class="fa fa-plane"></i> <span>Billetes</span></a></li>
         <li class=""><a href="empleados.php"><i class="fa fa-users"></i> <span>Empleados</span></a></li>
+        <li class=""><a href="empleados.php"><i class="fa fa-plane"></i> <span>Transacciones UV</span></a></li>
         <li class="treeview">
           <a href="#"><i class="fa fa-cubes"></i> <span>Administracion</span>
             <span class="pull-right-container">
@@ -266,10 +268,12 @@ desired effect
           </a>
           <ul class="treeview-menu">
             <li><a href="agencias.php"><i class="fa fa-home"></i>Agencias</a></li>
+            <li><a href="agencias.php"><i class="fa fa-bank"></i>Cuentas</a></li>
             <li><a href="tasas.php"><i class="fa fa-circle-o"></i>Tasas envios</a></li>
             <li><a href="contabilidad.php"><i class="fa fa-file-excel-o"></i>Contabilidad</a></li>
             <li><a href="rutas.php"><i class="fa fa-circle-o"></i>Rutas de vuelos</a></li>
             <li><a href="solicitudes.php"><i class="fa fa-envelope-o"></i>Solicitudes</a></li>
+            <li><a href="paises.php"><i class="fa fa-map-signs"></i>Paises</a></li>
             <li><a href="usuarios.php"><i class="fa fa-user"></i>Usuarios</a></li>
 			<li><a href="permiso.php"><i class="fa fa-lock"></i>Permisos</a></li>
           </ul>

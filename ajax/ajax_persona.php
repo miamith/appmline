@@ -180,8 +180,8 @@ switch ($_GET["op"]){
 			echo $rspta ? "Solicitud enviada" : "Solicitud no se pudo enviar";
 		}
 		else {
-			$rspta=$solicitud->Validacion($idtransaccionsms,$_SESSION['ap'],$descripcionsms,$mensaje,$mondespues);
-			echo $rspta ? "Solicitud autorizada" : "Solicitud no se pudo autorizar";
+			/*$rspta=$solicitud->Validacion($idtransaccionsms,$_SESSION['ap'],$descripcionsms,$mensaje,$mondespues);
+			echo $rspta ? "Solicitud autorizada" : "Solicitud no se pudo autorizar";*/
 		}
 		break;
 
