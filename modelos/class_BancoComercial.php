@@ -114,6 +114,7 @@ Class BancoComercial
 	  }
   
 
+      
 
 		  //Implementamos un método para insertar registros
 	  public function insertarDineroEnBancoComercial($referencia,$clienteremitente,$clientebeneficiario,$paisorigen,$paisdestino,$agenciaremitente,$ncpremitente,
