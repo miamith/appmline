@@ -43,6 +43,7 @@ if ($_SESSION['paises']==1)
                             <th>Partner API</th>
                             <th>Creado por</th>
                             <th>Fecha creacion</th>
+                            <th>Prefijo tel.</th>
                           </thead>
                           <tbody>                            
                           </tbody>
@@ -61,6 +62,7 @@ if ($_SESSION['paises']==1)
                             <th>Partner API</th>
                             <th>Creado por</th>
                             <th>Fecha creacion</th>
+                            <th>Prefijo tel.</th>
                           </tfoot>
                         </table>
                     </div>
@@ -109,9 +111,13 @@ if ($_SESSION['paises']==1)
                             <label>% recibir PAQ (*):</label>
                             <input type="text" class="form-control" name="porcenrecibirpaq" id="porcenrecibirpaq" maxlength="20" placeholder="Porcentaje de recibir un PAQUETE" required>
                           </div>
-                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12" > 
+                          <div class="form-group col-lg-3 col-md-3 col-sm-3 col-xs-12" > 
                             <label>Partner API:</label>
-                            <input type="text" class="form-control" name="partnerapi" id="partnerapi" maxlength="20" placeholder="Partner API" required>
+                            <input type="text" class="form-control" name="partnerapi" id="partnerapi" maxlength="20" placeholder="Partner API" >
+                          </div>
+                          <div class="form-group col-lg-3 col-md-3 col-sm-3 col-xs-12" > 
+                            <label>Prefijo telefonico(*):</label>
+                            <input type="text" class="form-control" name="prefijoTel" id="prefijoTel" maxlength="20" placeholder="Prefijo tel +240" required>
                           </div>
                           
                           <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">

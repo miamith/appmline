@@ -1,136 +1,125 @@
 var tabla;
 
 //Función que se ejecuta al inicio
-function init(){
-	mostrarform(false);
-	listar();
-// Etiqueta y ejecucion del Formulario comun
-	$("#formulario").on("submit",function(e)
-	{
-		guardaryeditar(e);
-	});
+function init() {
+    mostrarform(false);
+    listar();
+    // Etiqueta y ejecucion del Formulario comun
+    $("#formulario").on("submit", function(e) {
+        guardaryeditar(e);
+    });
 
 
-	//Cargamos los items al select Agencia Emisora
-	$.post("../ajax/ajax_persona.php?op=selectAgenciaEmpleado", function(r){
-	            $("#agenciaA").html(r);
-	            $('#agenciaA').selectpicker('refresh');
+    //Cargamos los items al select pais
+    $.post("../ajax/ajax_tasas.php?op=selectPaises", function(r) {
+        $("#pais_destino").html(r);
+        $('#pais_destino').selectpicker('refresh');
+        //alert(r);
 
-	});
-	//Cargamos los items al select Agencia Receptora
-	$.post("../ajax/ajax_persona.php?op=selectAgenciaReceptora", function(r){
-	            $("#agenciaB").html(r);
-	            $('#agenciaB').selectpicker('refresh');
+    });
 
-	});
 
 }
 
 //Función limpiar
-function limpiar()
-{
-	
-	$("#idtransaccion").val("");
-	$("#idreceptor").val("");
-	$("#nombreremitente").val("");
-	$("#nombrereceptor").val("");
-	$("#telefonorem").val("");
-	$("#telefonorec").val("");
-	$("#dirremitente").val("");
-	$("#dirreceptor").val("");
-	$("#DNIremitente").val("");
-	$("#DNIremitente").attr('readonly', true);
-	$("#DNIreceptor").val("");
-	$("#monto").val("");
-	$("#comision").val("");
-	$("#descripcion").val("");
-	$("#existeR").val("");
+function limpiar() {
+
+    $("#idtransaccion").val("");
+    $("#idreceptor").val("");
+    $("#nombreremitente").val("");
+    $("#nombrereceptor").val("");
+    $("#telefonorem").val("");
+    $("#telefonorec").val("");
+    $("#dirremitente").val("");
+    $("#dirreceptor").val("");
+    $("#DNIremitente").val("");
+    $("#DNIremitente").attr('readonly', true);
+    $("#monto").val("");
+    $("#comision").val("");
+    $("#descripcion").val("");
+    $("#existeR").val("");
     $("#existeC").val("");
     $("#codigo").val("");
+    $("#secreto").val("");
+    $("#comi_remi").val("");
+    $("#aCobrar").val("");
+    $("#monto").val("");
 }
 
 //Función mostrar formulario
-function mostrarform(flag)
-{
-	limpiar();
-	if (flag)
-	{
-		$("#listadoregistros").hide();
-		$("#formularioregistros").show();
-		$("#btnGuardar").prop("disabled",false);
-		$("#btnagregar").hide();
-		$("#DNIremitente").attr('readonly', false);
-		$("#monto").attr('readonly', false);
-	}
-	else
-	{
-		$("#listadoregistros").show();
-		$("#formularioregistros").hide();
-		$("#btnagregar").show();
-	}
+function mostrarform(flag) {
+    limpiar();
+    if (flag) {
+        $("#listadoregistros").hide();
+        $("#formularioregistros").show();
+        $("#btnGuardar").prop("disabled", false);
+        $("#btnagregar").hide();
+        $("#DNIremitente").attr('readonly', false);
+        $("#monto").attr('readonly', false);
+    } else {
+        $("#listadoregistros").show();
+        $("#formularioregistros").hide();
+        $("#btnagregar").show();
+    }
 }
 
 //Función cancelarform
-function cancelarform()
-{
-	limpiar();
-	mostrarform(false);
+function cancelarform() {
+    limpiar();
+    mostrarform(false);
 }
 
 //Función Listar, se llama arriba de este mismo archivo en la funcion init
-function listar()
-{
-	tabla=$('#tbllistado').dataTable(
-	{
-		"aProcessing": true,//Activamos el procesamiento del datatables
-	    "aServerSide": true,//Paginación y filtrado realizados por el servidor
-	    dom: 'Bfrtip',//Definimos los elementos del control de tabla
-	    buttons: [		          
-		            'copyHtml5',
-		            'excelHtml5',
-		            'csvHtml5',
-		            'pdf'
-		        ],
-		"ajax":
-				{
-					url: '../ajax/ajax_persona.php?op=listarEnvios',
-					type : "get",
-					dataType : "json",						
-					error: function(e){
-						console.log(e.responseText);	
-					}
-				},
-		"bDestroy": true,
-		"iDisplayLength": 10,//Paginación
-	    "order": [[ 9, "desc" ]]//Ordenar (columna,orden)
-	}).DataTable();
+function listar() {
+    tabla = $('#tbllistado').dataTable({
+        "aProcessing": true, //Activamos el procesamiento del datatables
+        "aServerSide": true, //Paginación y filtrado realizados por el servidor
+        dom: 'Bfrtip', //Definimos los elementos del control de tabla
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'csvHtml5',
+            'pdf'
+        ],
+        "ajax": {
+            url: '../ajax/ajax_persona.php?op=listarEnvios',
+            type: "get",
+            dataType: "json",
+            error: function(e) {
+                console.log(e.responseText);
+            }
+        },
+        "bDestroy": true,
+        "iDisplayLength": 10, //Paginación
+        "order": [
+                [9, "desc"]
+            ] //Ordenar (columna,orden)
+    }).DataTable();
 }
 
 
 //Función para guardar o editar
 
-function guardaryeditar(e)
-{
-	e.preventDefault(); //No se activará la acción predeterminada del evento
-	$("#btnGuardar").prop("disabled",true);
-	var formData = new FormData($("#formulario")[0]);
+function guardaryeditar(e) {
+    e.preventDefault(); //No se activará la acción predeterminada del evento
+    $("#btnGuardar").prop("disabled", true);
+    var formData = new FormData($("#formulario")[0]);
 
-	$.ajax({
-		url: "../ajax/ajax_persona.php?op=guardaryeditar",
-	    type: "POST",
-	    data: formData,
-	    contentType: false,
-	    processData: false,
+    $.ajax({
+        url: "../ajax/ajax_persona.php?op=guardaryeditar",
+        type: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
 
-	    success: function(datos)
-	    {                    
-	          bootbox.alert(datos);	          
-	          mostrarform(false);
-	          tabla.ajax.reload();
-	    }
+        success: function(datos) {
+            bootbox.alert(datos);
+            mostrarform(false);
+            tabla.ajax.reload();
+        }
 
-	});
-	limpiar();
+    });
+    limpiar();
 }
 
 
@@ -175,115 +164,148 @@ function insertarCopia()
 */
 
 
-function mostrar(idtransaccion)
-{
-	$.post("../ajax/ajax_persona.php?op=mostrar",{idtransaccion : idtransaccion}, function(data, status)
-	{
-		data = JSON.parse(data);		
-		mostrarform(true);
+function mostrar(idtransaccion) {
+    $.post("../ajax/ajax_persona.php?op=mostrar", { idtransaccion: idtransaccion }, function(data, status) {
+        data = JSON.parse(data);
+        mostrarform(true);
 
-		$("#nombreremitente").val(data.nombreremitente);
-		$("#nombrereceptor").val(data.nombrereceptor);
-		$("#telefonorem").val(data.telefonorem);
-		$("#telefonorec").val(data.telefonorec);
-		$("#dirremitente").val(data.dirremitente);
-		$("#dirreceptor").val(data.dirreceptor);
-		$("#DNIremitente").val(data.DNIremitente);
-		$("#DNIremitente").attr('readonly', true);
-		$("#DNIreceptor").val(data.DNIreceptor);
-		$("#tipo").val(data.tipo);
-		$("#tipo").selectpicker('refresh');
-		$("#agenciaA").val(data.agenciaA);
-		$("#agenciaA").selectpicker('refresh');
-		$("#agenciaB").val(data.agenciaB);
-		$("#agenciaB").selectpicker('refresh');
-		$("#monto").val(data.monto);
-		$("#comision").val(data.comision);
-		$("#monto").attr('readonly', true);
-		$("#descripcion").val(data.descripcion);
-		$("#idtransaccion").val(data.idtransaccion);
-		$("#idreceptor").val(data.idreceptor);
-		$("#codigoAc").val(data.codigo);
-		$("#nombreRSINO").html(''); // En el buscador de nombres
-		$("#nombreSINO").html(''); // En el buscador
+        $("#nombreremitente").val(data.nombreremitente);
+        $("#nombrereceptor").val(data.nombrereceptor);
+        $("#telefonorem").val(data.telefonorem);
+        $("#telefonorec").val(data.telefonorec);
+        $("#dirremitente").val(data.dirremitente);
+        $("#dirreceptor").val(data.dirreceptor);
+        $("#DNIremitente").val(data.DNIremitente);
+        $("#DNIremitente").attr('readonly', true);
+        $("#tipo").val(data.tipo);
+        $("#tipo").selectpicker('refresh');
+        $("#monto").val(data.monto);
+        $("#monto").attr('readonly', true);
+        $("#comision").val(data.comision);
+        $("#aCobrar").val(data.cobrar);
+        $("#comi_remi").val(data.comi_remi);
+        $("#descripcion").val(data.descripcion);
+        $("#idtransaccion").val(data.idtransaccion);
+        $("#idreceptor").val(data.idreceptor);
+        $("#referenciaAc").val(data.referencia);
+        $("#codigoAc").val(data.codigo);
+        $("#secreto").val(data.secreto);
+        $("#nombreRSINO").html(''); // En el buscador de nombres
+        $("#nombreSINO").html(''); // En el buscador
+        $("#btnGuardar").innerText = 'Solicitar modificacion';
 
-		 if (data.estadot=="Recibido" || data.estadot=="Cancelado" || data.estadot=="Revalidar"  ) {
-			$("#btnGuardar").prop("disabled",true);
-		}else {
-			$("#btnGuardar").prop("disabled",false);}
- 	})
+
+        if (data.estadot == "Recibido" || data.estadot == "Cancelado" || data.estadot == "Revalidar") {
+            $("#btnGuardar").innerText = 'Solicitud enviada';
+            $("#btnGuardar").prop("disabled", true);
+        } else {
+            $("#btnGuardar").prop("disabled", false);
+        }
+    })
 }
 
 // Ponerle la comision recibida en el input directamente en tiempo real
-function comisiones(monto) {
-	$.post("../ajax/ajax_persona.php?op=ponerComisiones",{monto : monto}, function(data, status)
-	{
-		
-		data = JSON.parse(data);
-			$("#comision").val(data.comisiont);	  
- 	})
+function comisiones() {
+    pais_destino = $("#pais_destino").val();
+    monto = $("#monto").val();
+    $.post("../ajax/ajax_persona.php?op=ponerComisiones", { monto: monto, pais_destino: pais_destino }, function(data, status) {
+        data = JSON.parse(data);
+        $("#comision").val(data.comisiont);
+        IVA = (data.comisiont * data.IVA) / 100;
+        restoLibre = (data.comisiont - IVA);
+        comisionCajaEnvio = (restoLibre * data.porcenENVIO) / 100;
+        $("#comi_remi").val(comisionCajaEnvio);
+        $("#aCobrar").val(monto - data.comisiont);
+        $("#IVA").val(IVA);
+
+
+    })
 
 
 }
 
+// Traer el saldo actual de la cuenta del ususraio a  realizar el envio
+function traerSaldoActual(ap) {
+
+    $.post("../ajax/ajax_persona.php?op=traerSaldoActual", { ap: ap }, function(data, status) {
+
+        if (data != "null" & DNIremitente != "" & DNIremitente != " ") {
+            data = JSON.parse(data);
+            var saldoRestante = $("#saldo").val(data.saldo);
+        }
+    })
+
+}
+
+// Verificar saldo
+function verficarSaldo(monto) {
+    var saldoRestante = $("#saldo").val();
+
+    if (monto > saldoRestante) {
+        bootbox.alert('No puede enviar un monto superior al saldo');
+        $("#monto").val("");
+    }
+
+}
+
+
+
 // Ponerle la comision recibida en el input directamente en tiempo real // nomcompleto,tel,direccion,DNIremitente
-function buscarRemitenteRellenarNuevo(nomcompleto) {
+function buscarRemitenteRellenarNuevo(DNIremitente) {
 
-	$.post("../ajax/ajax_persona.php?op=buscarRemitenteRellenarNuevo",{nomcompleto : nomcompleto}, function(data, status)
-	{
-		
-		if (data!="null" & nomcompleto!="" & nomcompleto!=" ") {
-			data = JSON.parse(data);
-						$("#telefonorem").val(data.tel);
-						$("#dirremitente").val(data.direccion);
-						$("#DNIremitente").val(data.DNIremitente);
-						$("#DNIremitente").attr('readonly', true);
-						$("#nombreSINO").html(data.nomcompleto);
-						$("#existeR").val("1");
-			} else{
-					data = JSON.parse(data);
-					$("#telefonorem").val("");
-					$("#dirremitente").val("");
-					$("#DNIremitente").val("");
-					$("#DNIremitente").attr('readonly', false);
-					$("#nombreSINO").html('<i class="label label-danger">No existe</i>');
-					$("#existeR").val("");
+    $.post("../ajax/ajax_persona.php?op=buscarRemitenteRellenarNuevo", { DNIremitente: DNIremitente }, function(data, status) {
 
-			}		  
- 	})
+        if (data != "null" & DNIremitente != "" & DNIremitente != " ") {
+            data = JSON.parse(data);
+            $("#telefonorem").val(data.tel);
+            $("#dirremitente").val(data.direccion);
+            $("#DNIremitente").val(data.DNIremitente);
+            //$("#DNIremitente").attr('readonly', true);
+            $("#nombreSINO").html(data.nomcompleto);
+            $("#nombreremitente").val(data.nomcompleto);
+            $("#existeR").val("1");
+        } else {
+            data = JSON.parse(data);
+            $("#telefonorem").val("");
+            $("#dirremitente").val("");
+            $("#DNIremitente").attr('readonly', false);
+            $("#nombreremitente").val("");
+            $("#nombreSINO").html('<i class="label label-danger">No existe</i>');
+            $("#existeR").val("");
+
+        }
+    })
 
 
 }
 
 // Poner datos receptor directamente en tiempo real // nomcompler,tel,direccion,DNIremitente
-function buscarReceptorRellenarNuevo(nomcompler) {
+function buscarReceptorRellenarNuevo(telr) {
 
-	$.post("../ajax/ajax_persona.php?op=buscarReceptorRellenarNuevo",{nomcompler : nomcompler}, function(data, status)
-	{
-		
-		if (data!="null" & nomcompler!="" & nomcompler!=" ") {
-			data = JSON.parse(data);
-						$("#telefonorec").val(data.telr);
-						$("#idreceptor").val(data.idreceptor);
-						$("#dirreceptor").val(data.direccionr);
-						$("#DNIreceptor").val(data.DNIreceptor);
-						$("#DNIreceptor").attr('readonly', true);
-						$("#nombreRSINO").html(data.nomcompler);
-						$("#existeC").val("1");
-			} else{
-					data = JSON.parse(data);
-					$("#telefonorec").val("");
-					$("#dirreceptor").val("");
-					$("#DNIreceptor").val("");
-					$("#DNIreceptor").attr('readonly', false);
-					$("#nombreRSINO").html('<i class="label label-danger">No existe</i>');
-					$("#existeC").val("");
+    $.post("../ajax/ajax_persona.php?op=buscarReceptorRellenarNuevo", { telr: telr }, function(data, status) {
 
-			}		  
- 	})
+        if (data != "null" & telr != "" & telr != " ") {
+            data = JSON.parse(data);
+            $("#telefonorec").val(data.telr);
+            $("#idreceptor").val(data.idreceptor);
+            $("#dirreceptor").val(data.direccionr);
+            $("#nombrereceptor").val(data.nomcompler);
+            $("#nombreRSINO").html(data.nomcompler);
+            $("#existeC").val("1");
+        } else {
+            data = JSON.parse(data);
+            $("#nombrereceptor").val("");
+            $("#dirreceptor").val("");
+            $("#nombreRSINO").html('<i class="label label-danger">No existe</i>');
+            $("#existeC").val("");
+
+        }
+    })
 
 
 }
+
+
 //Función para eliminar registros
 /*function eliminar(idtransaccion)
 {
@@ -299,27 +321,26 @@ function buscarReceptorRellenarNuevo(nomcompler) {
 }*/
 
 //Función limpiar sms modal
-function limpiarsms()
-{
-	
-	$("#mensaje").val("");
-	$("#descripcionsms").val("");
-	$("#idsolicitud").val("");
-	$("#monantes").val("");
-	$("#idtransaccionsms").val("");
+function limpiarsms() {
+
+    $("#mensaje").val("");
+    $("#descripcionsms").val("");
+    $("#idsolicitud").val("");
+    $("#monantes").val("");
+    $("#idtransaccionsms").val("");
 }
 
 
 //Función para verificar numeros de DNI a que no sean iguales
 function verificarDNI() {
 
-	var DNIreceptor=$("#DNIreceptor").val();
-	var DNIremitente=$("#DNIremitente").val();
+    var DNIreceptor = $("#DNIreceptor").val();
+    var DNIremitente = $("#DNIremitente").val();
 
-	if (DNIremitente==DNIreceptor) {
-      alert("El DNI del remitente no puede ser igual al del receptor");
-      $("#DNIreceptor").val("");
-	}
+    if (DNIremitente == DNIreceptor) {
+        bootbox.alert("El DNI del remitente no puede ser igual al del receptor");
+        $("#DNIreceptor").val("");
+    }
 
 }
 

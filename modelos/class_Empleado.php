@@ -55,17 +55,39 @@ Class Empleado
 	//Implementar un método para mostrar los datos de un registro a modificar
 	public function mostrar($idempleado)
 	{
-		$sql="SELECT idempleado,ap,DNI,cargo,salario,nomcompleto,tel,direccion,feinicioempleo,agencia_em FROM empleados,remitentes WHERE remitentes.DNIremitente=empleados.DNI AND idempleado='$idempleado'";
+		$sql="SELECT idempleado,ap,DNI,cargo,rol,condicion,salario, a.pais ,ciudad,interno,nomcompleto,tel,direccion,feinicioempleo,agencia_em, agecrea FROM empleados a,clientes b WHERE b.DNIremitente=a.DNI AND a.idempleado='$idempleado'";
 		return ejecutarConsultaSimpleFila($sql);
 	}
 
 	//Implementar un método para listar los registros
 	public function listar()
 	{
-		$sql="SELECT idempleado,ap,DNI,cargo,pais as pais_nombre,ciudad,interno,agencia_em as agenciaA,rol,salario,nomcompleto,tel,direccion,fecrea,feinicioempleo,femod,agecrea FROM empleados,remitentes WHERE remitentes.DNIremitente=empleados.DNI";
+		$sql="SELECT idempleado,ap,DNI,cargo,rol,condicion,salario, (select nombre from paises where idPais=a.pais) as pais_nombre ,ciudad,interno,nomcompleto,tel,direccion,feinicioempleo,(select nombre from agencias WHERE idagencia=a.agencia_em) as agenciaA, agecrea,a.fecrea FROM empleados a,clientes b WHERE b.DNIremitente=a.DNI";
 		return ejecutarConsulta($sql);
 
 	}
+
+		//Implementar un método para BUSCAR DIP y eviatr que se repita
+		public function validarDIP($DNIremitente)
+		{
+				
+			$sql="SELECT DNI
+			FROM empleados e 
+			WHERE e.DNI='$DNIremitente'";
+			return ejecutarConsultaSimpleFila($sql);
+	
+		}	
+
+			//Implementar un método para BUSCAR AP y eviatr que se repita
+			public function validarAP($ap)
+			{
+					
+				$sql="SELECT ap
+				FROM empleados e 
+				WHERE e.ap='$ap'";
+				return ejecutarConsultaSimpleFila($sql);
+		
+			}	
 
 }
 

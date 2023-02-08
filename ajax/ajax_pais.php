@@ -16,16 +16,17 @@ $porcenrecibir=isset($_POST["porcenrecibir"])? limpiarCadena($_POST["porcenrecib
 $porcenenviopaq=isset($_POST["porcenenviopaq"])? limpiarCadena($_POST["porcenenviopaq"]):"";
 $porcenrecibirpaq=isset($_POST["porcenrecibirpaq"])? limpiarCadena($_POST["porcenrecibirpaq"]):"";
 $partnerapi=isset($_POST["partnerapi"])? limpiarCadena($_POST["partnerapi"]):"";
+$prefijoTel=isset($_POST["prefijoTel"])? limpiarCadena($_POST["prefijoTel"]):"";
 
 
 switch ($_GET["op"]){
 	case 'guardaryeditar':
 		if (empty($idpais)){
-			$rspta=$consulta->insertar($nompais,$descripcion,$limienviolocal,$limienvioint,$moneda,$iva,$porcenenvio,$porcenrecibir,$porcenenviopaq,$porcenrecibirpaq,$partnerapi,$_SESSION['ap']);
+			$rspta=$consulta->insertar($nompais,$descripcion,$limienviolocal,$limienvioint,$moneda,$iva,$porcenenvio,$porcenrecibir,$porcenenviopaq,$porcenrecibirpaq,$partnerapi,$prefijoTel,$_SESSION['ap']);
 			echo $rspta ? "Pais registrado" : "Pais no se pudo registrar";
 		}
 		else {
-			$rspta=$consulta->editar($idpais,$nompais,$descripcion,$limienviolocal,$limienvioint,$moneda,$iva,$porcenenvio,$porcenrecibir,$porcenenviopaq,$porcenrecibirpaq,$partnerapi,$_SESSION['ap']);
+			$rspta=$consulta->editar($idpais,$nompais,$descripcion,$limienviolocal,$limienvioint,$moneda,$iva,$porcenenvio,$porcenrecibir,$porcenenviopaq,$porcenrecibirpaq,$partnerapi,$prefijoTel,$_SESSION['ap']);
 			echo $rspta ? "Pais actualizado" : "Pais no se pudo actualizar";
 		}
 	break;
@@ -62,7 +63,8 @@ switch ($_GET["op"]){
  				"10"=>$reg->porcenRECI_PAQ,
  				"11"=>$reg->partnerAPI,
  				"12"=>$reg->uscreador,
-                "13"=>$reg->fecrea
+                "13"=>$reg->fecrea,
+				"14"=>$reg->prefijoTel
  				);
 
  		}

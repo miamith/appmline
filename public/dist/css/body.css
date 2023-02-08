@@ -1,6 +1,17 @@
 body {
-	/*background-image: url("../public/dist/img/bg.jpg") !important;*/
-	
-    background-image:url("../img/bg2.jpg") !important;
-    background-repeat: auto;
+    /*background-image: url("../public/dist/img/bg.jpg") !important;*/
+    background-image: url("../img/bg2.png") !important;
+    background-repeat: no-repeat !important;
+    background-position: initial;
+    background-size: 200px 160px;
+}
+
+#logologin {
+    margin-left: 40%;
+    border-radius: revert;
+    margin-bottom: -6%;
+}
+
+#btnBuscar {
+    width: 50px !important;
 }

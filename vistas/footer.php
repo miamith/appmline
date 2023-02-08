@@ -5,7 +5,7 @@
       Version 1.0
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2023 <a href="#">M-line</a>.</strong> Todos los derechos reservados.
+    <strong>Copyright &copy; 2023 <a href="#">M_line</a>.</strong> Todos los derechos reservados.
   </footer>
 
   <!-- Control Sidebar -->
@@ -95,6 +95,9 @@
 <script src="../public/dist/js/bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../public/dist/js/adminlte.min.js"></script>
+<script src="../public/dist/js/moment.min.js"></script>
+<script src="../public/dist/js/bootstrap-datepicker.min.js"></script>
+<script src="../public/dist/js/daterangepicker.js"></script>
 
     <!-- DATATABLES -->
     <script src="../public/dist/datatables/jquery.dataTables.min.js"></script>    
@@ -106,6 +109,28 @@
     <script src="../public/dist/datatables/vfs_fonts.js"></script> 
     <script src="../public/dist/js/bootbox.min.js"></script> 
     <script src="../public/dist/js/bootstrap-select.min.js"></script>
+
+
+
+    <script>
+        $(function () {
+            var url = window.location;
+            // for single sidebar menu
+            $('ul.sidebar-menu a').filter(function () {
+              //console.log(this.href);
+              //console.log(url);
+                return this.href == url;
+            }).addClass('active');
+
+            // for sidebar menu and treeview
+            $('ul.treeview a').filter(function () {
+                return this.href == url;
+            }).parentsUntil(".treeview.menu-open > ul.treeview-menu")
+        .css({'display': 'block'})
+        .addClass('menu-open').prev('a')
+        .addClass('active');
+        });
+    </script>
 
 </body>
 </html>

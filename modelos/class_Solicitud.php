@@ -70,7 +70,7 @@ Class Solicitud
 	public function restaurar($DNIremitenteh,$nomcompletoch,$telch,$direccionch,$idreceptorh,$DNIreceptorh,$nomcomplerh,$telrh,$direccionrh,$ageenviah,$agerecibeh,$tipoh,$montoh,$comisionh,$estadoth,$descripcion,$agentcreh,$fecrea,$fechavalidacion,$idtransaccionh)
 			{
 				// Actualizamos remitente
-			  $sql="UPDATE remitentes SET nomcompleto='$nomcompletoch',tel='$telch',direccion='$direccionch' WHERE DNIremitente='$DNIremitenteh'";
+			  $sql="UPDATE clientes SET nomcompleto='$nomcompletoch',tel='$telch',direccion='$direccionch' WHERE DNIremitente='$DNIremitenteh'";
 			  ejecutarConsulta($sql);
 				// Actualizamos receptor
 			  $sql="UPDATE receptor SET DNIreceptor='$DNIreceptorh',nomcompler='$nomcomplerh',telr='$telrh',direccionr='$direccionrh' WHERE idreceptor='$idreceptorh'";

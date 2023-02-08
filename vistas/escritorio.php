@@ -26,34 +26,63 @@ if ($_SESSION['escritorio']==1)
 <?php
     require_once "../modelos/class_Consultas.php";
     $cons = new Consulta();
-
+   
+    
+  
 // TODO PROCEDE DE LAS FUNCIONES CREADAS EN class_Consultas
-    $rspta = $cons->totalenvios();
+    $rspta = $cons->totalenvios($_SESSION['pais'],$_SESSION['agencia_em'],$_SESSION['rol'],$_SESSION['ap']);
     $reg = $rspta->fetch_object();
     $tot_envios=$reg->monto;
 
-    $rspta=$cons->totalenviosHOY();
+    $rspta=$cons->totalenviosHOY($_SESSION['pais'],$_SESSION['agencia_em'],$_SESSION['rol'],$_SESSION['ap']);
     $reg = $rspta->fetch_object();
     $tot_enviosHOY=$reg->monto;
 
-    $rspta=$cons->totalrecibos();
+    $rspta=$cons->totalrecibos($_SESSION['pais'],$_SESSION['agencia_em'],$_SESSION['rol'],$_SESSION['ap']);
     $reg = $rspta->fetch_object();
     $tot_recibos=$reg->monto;
 
-    $rspta=$cons->totalrecibosHOY();
+    $rspta=$cons->totalrecibosHOY($_SESSION['pais'],$_SESSION['agencia_em'],$_SESSION['rol'],$_SESSION['ap']);
     $reg = $rspta->fetch_object();
     $tot_recibosHOY=$reg->monto;
 
-        $rspta=$cons->totalcomisiones();
+    $rspta=$cons->totalcomisionesMLINE($_SESSION['pais'],$_SESSION['agencia_em'],$_SESSION['rol'],$_SESSION['ap']);
     $reg = $rspta->fetch_object();
-    $tot_comisiones=$reg->monto;
+    $tot_comisionesMLINE=$reg->monto;
 
-    $rspta=$cons->totalcomisionesHOY();
+    $rspta=$cons->totalcomisionesEnvio($_SESSION['pais'],$_SESSION['agencia_em'],$_SESSION['rol'],$_SESSION['ap']);
     $reg = $rspta->fetch_object();
-    $tot_comisionesHOY=$reg->monto;
+    $tot_comisionesEnvio=$reg->monto;
+
+    $rspta=$cons->totalcomisionesRetitos($_SESSION['pais'],$_SESSION['agencia_em'],$_SESSION['rol'],$_SESSION['ap']);
+    $reg = $rspta->fetch_object();
+    $tot_comisionesRetiros=$reg->monto;
+
+    $rspta=$cons->totalcomisionesHOYEnvios($_SESSION['pais'],$_SESSION['agencia_em'],$_SESSION['rol'],$_SESSION['ap']);
+    $reg = $rspta->fetch_object();
+    $tot_comisionesHOYEnvios=$reg->monto;
+
+    $rspta=$cons->totalcomisionesHOYRetiros($_SESSION['pais'],$_SESSION['agencia_em'],$_SESSION['rol'],$_SESSION['ap']);
+    $reg = $rspta->fetch_object();
+    $tot_comisionesHOYRetiros=$reg->monto;
+
+
+    $rspta=$cons->totalcomisionesGENERALES($_SESSION['pais'],$_SESSION['agencia_em'],$_SESSION['rol'],$_SESSION['ap']);
+    $reg = $rspta->fetch_object();
+    $tot_comisionesGENERALES=$reg->monto;
+
+    $rspta=$cons->totalIVA();
+    $reg = $rspta->fetch_object();
+    $tot_IVA=$reg->monto;
+
+// CUENTA DE CAPITAL SALDO
+    $rspta=$cons->totalSaldoCAPITAL();
+    $reg = $rspta->fetch_object();
+    $tot_saldo_CAPITAL=$reg->monto;
+
 
     // Datos para mostrar en el grafico de enviosUlt10dias || fecha,total
-     $rspta=$cons->totalenviosUltimos_10dias();
+     $rspta=$cons->totalenviosUltimos_10dias($_SESSION['pais'],$_SESSION['agencia_em'],$_SESSION['rol'],$_SESSION['ap']);
      $fechaE='';
      $totalE='';
        while ($reg = $rspta->fetch_object())
@@ -67,7 +96,7 @@ if ($_SESSION['escritorio']==1)
 
 
     // Datos para mostrar en el grafico de recibosUlt10dias || fecha,total
-     $rspta=$cons->totalrecibosUltimos_10dias();
+     $rspta=$cons->totalrecibosUltimos_10dias($_SESSION['pais'],$_SESSION['agencia_em'],$_SESSION['rol'],$_SESSION['ap']);
      $fechaR='';
      $totalR='';
        while ($reg = $rspta->fetch_object())
@@ -79,8 +108,11 @@ if ($_SESSION['escritorio']==1)
         $fechaR=substr($fechaR,0,-1);
         $totalR=substr($totalR,0,-1);
 
+
+
+
     // Datos para mostrar en el grafico de enviosUlt10dias || nomcompleto,total
-     $rspta=$cons->ClientesMasEnvios();
+  /*    $rspta=$cons->ClientesMasEnvios();
      $nomcompleto='';
      $total='';
        while ($reg = $rspta->fetch_object())
@@ -93,7 +125,7 @@ if ($_SESSION['escritorio']==1)
         $total=substr($total,0,-1);
 
    // Datos para mostrar en el grafico de CompaniaMasBilletes || nomcompleto,total
-     $rspta=$cons->CompaniaMasBilletes();
+    $rspta=$cons->CompaniaMasBilletes();
      $company='';
      $totalB='';
        while ($reg = $rspta->fetch_object())
@@ -104,7 +136,7 @@ if ($_SESSION['escritorio']==1)
     // Quitamos la ultima oma
         $company=substr($company,0,-1);
         $totalB=substr($totalB,0,-1);
-
+*/
 
 
  ?>
@@ -137,6 +169,7 @@ if ($_SESSION['escritorio']==1)
                             </div>
                             <a href="consultas_envios.php" class="small-box-footer">Envios <i class="fa fa-arrow-circle-right"></i></a>
                           </div>
+                          
                       </div>
 
                       <div class="col-lg-2 col-xs-6">
@@ -144,12 +177,12 @@ if ($_SESSION['escritorio']==1)
                         <div class="small-box bg-yellow">
                           <div class="inner">
                             <h4 style="font-size:17px;"><strong><?php echo number_format($tot_recibos, 0, '', '.'); ?> FCFA</strong></h4>
-                            <p>Total recibos</p>
+                            <p>Total retiros</p>
                           </div>
                           <div class="icon">
                             <i class="ion ion-stats-bars"></i>
                           </div>
-                          <a href="consultas_recibos.php" class="small-box-footer">Recibos <i class="fa fa-arrow-circle-right"></i></a>
+                          <a href="consultas_recibos.php" class="small-box-footer">Retiros <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
                       </div>
 
@@ -158,7 +191,7 @@ if ($_SESSION['escritorio']==1)
                         <div class="small-box bg-red">
                           <div class="inner">
                             <h4 style="font-size:17px;"><strong><?php echo number_format($tot_recibosHOY, 0, '', '.'); ?> FCFA</strong></h4>
-                            <p>Total recibos HOY</p>
+                            <p>Total retiros HOY</p>
                           </div>
                           <div class="icon">
                             <i class="ion ion-pie-graph"></i>
@@ -172,8 +205,37 @@ if ($_SESSION['escritorio']==1)
                         <!-- small box -->
                         <div class="small-box bg-blue">
                           <div class="inner">
-                            <h4 style="font-size:17px;"><strong><?php echo number_format($tot_comisiones, 0, '', '.'); ?> FCFA</strong></h4>
+                            <h4 style="font-size:17px;"><strong><?php echo number_format($tot_comisionesMLINE, 0, '', '.'); ?> FCFA</strong></h4>
                             <p>Total comisiones</p>
+                          </div>
+                          <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                          </div>
+                          <a href="consultas_envios.php" class="small-box-footer">Comisiones <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-2 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-blue">
+                          <div class="inner">
+                            <h4 style="font-size:17px;"><strong><?php echo number_format($tot_comisionesEnvio, 0, '', '.'); ?> FCFA</strong></h4>
+                            <p>Total comisiones Envios</p>
+                          </div>
+                          <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                          </div>
+                          <a href="consultas_envios.php" class="small-box-footer">Comisiones <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                      </div>
+
+                      
+                      <div class="col-lg-2 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-blue">
+                          <div class="inner">
+                            <h4 style="font-size:17px;"><strong><?php echo number_format($tot_comisionesRetiros, 0, '', '.'); ?> FCFA</strong></h4>
+                            <p>Total comisiones Retiros</p>
                           </div>
                           <div class="icon">
                             <i class="ion ion-stats-bars"></i>
@@ -186,8 +248,66 @@ if ($_SESSION['escritorio']==1)
                         <!-- small box -->
                         <div class="small-box bg-purple">
                           <div class="inner">
-                            <h4 style="font-size:17px;"><strong><?php echo number_format($tot_comisionesHOY, 0, '', '.'); ?> FCFA</strong></h4>
-                            <p>Comisiones HOY</p>
+                            <h4 style="font-size:17px;"><strong><?php echo number_format($tot_comisionesHOYEnvios, 0, '', '.'); ?> FCFA</strong></h4>
+                            <p>Comisiones HOY Envios</p>
+                          </div>
+                          <div class="icon">
+                            <i class="ion ion-pie-graph"></i>
+                          </div>
+                          <a href="consultas_envios.php" class="small-box-footer">Comisiones <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                      </div>
+
+                      
+                      <div class="col-lg-2 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-purple">
+                          <div class="inner">
+                            <h4 style="font-size:17px;"><strong><?php echo number_format($tot_comisionesHOYRetiros, 0, '', '.'); ?> FCFA</strong></h4>
+                            <p>Comisiones HOY Retiros</p>
+                          </div>
+                          <div class="icon">
+                            <i class="ion ion-pie-graph"></i>
+                          </div>
+                          <a href="consultas_envios.php" class="small-box-footer">Comisiones <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                      </div>
+
+
+                      <div class="col-lg-2 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-purple">
+                          <div class="inner">
+                            <h4 style="font-size:17px;"><strong><?php echo number_format($tot_comisionesGENERALES, 0, '', '.'); ?> FCFA</strong></h4>
+                            <p>Comisiones GLOB</p>
+                          </div>
+                          <div class="icon">
+                            <i class="ion ion-pie-graph"></i>
+                          </div>
+                          <a href="consultas_envios.php" class="small-box-footer">Comisiones <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                      </div>        
+
+                      <div class="col-lg-2 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-blue">
+                          <div class="inner">
+                            <h4 style="font-size:17px;"><strong><?php echo number_format($tot_IVA, 0, '', '.'); ?> FCFA</strong></h4>
+                            <p>IVA</p>
+                          </div>
+                          <div class="icon">
+                            <i class="ion ion-pie-graph"></i>
+                          </div>
+                          <a href="consultas_envios.php" class="small-box-footer">Comisiones <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-2 col-xs-6">
+                        <!-- small box -->
+                        <div class="small-box bg-green">
+                          <div class="inner">
+                            <h4 style="font-size:17px;"><strong><?php echo number_format($tot_saldo_CAPITAL, 0, '', '.'); ?> FCFA</strong></h4>
+                            <p>CAPITAL</p>
                           </div>
                           <div class="icon">
                             <i class="ion ion-pie-graph"></i>
@@ -201,9 +321,9 @@ if ($_SESSION['escritorio']==1)
 
             <div class="panel-body" style="height: 400px;" >  <!-- Graficos -->
 
-                <div class="col-md-6">
+          <!--        <div class="col-md-6">
 
-                          <!-- BAR CHART -->
+                           BAR CHART 
                       <div class="box box-success">
                         <div class="box-header with-border">
                           <h3 class="box-title" style="font-size:17px;">Clientes con mas envios</h3>
@@ -216,10 +336,10 @@ if ($_SESSION['escritorio']==1)
                           <div class="chart">
                             <canvas id="ClientesMasEnvios" style="height: 257px; width: 515px;" width="515" height="257"></canvas>
                           </div>
-                        </div><!-- /.box-body -->
-                      </div><!-- /.box -->
-              </div>
-              <div class="col-md-6">
+                        </div> /.box-body 
+                      </div> /.box 
+              </div> -->
+           <!--  <div class="col-md-6">
                        <div class="box box-danger">
                         <div class="box-header with-border">
                           <h3 class="box-title" style="font-size:17px;">Compañia de billetes mas vendidos</h3>
@@ -230,10 +350,10 @@ if ($_SESSION['escritorio']==1)
                         </div>
                         <div class="box-body">
                             <canvas id="CompaniaMasBilletes" style="height: 257px; width: 515px;" width="515" height="257"></canvas>
-                        </div><!-- /.box-body -->
+                        </div> /.box-body 
                       </div>
 
-                 </div>
+                    </div>  -->
               
             <div class="col-md-6">
               <!-- BAR CHART -->
@@ -293,7 +413,7 @@ require 'footer.php';
   
 // Clientes con mas envios
 // For a pie chart
-var ctx = document.getElementById('ClientesMasEnvios').getContext('2d');
+/* var ctx = document.getElementById('ClientesMasEnvios').getContext('2d');
 var ClientesMasEnvios = new Chart(ctx, {
     type: 'doughnut',
     data: {
@@ -410,7 +530,7 @@ var CompaniaMasBilletes = new Chart(ctx, {
     },
     
 });
-
+ */
 
 // Envios ultimos 10 dias
 var ctx = document.getElementById('enviosUlt10dias').getContext('2d');

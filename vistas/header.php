@@ -7,11 +7,18 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>M-line APP SISTEMA</title>
+  <title>appmlinemoney.com</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+      <!-- IE -->
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <!-- other browsers -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
   <link rel="stylesheet" href="../public/dist/css/bootstrap.min.css">
    <link rel="stylesheet" href="../public/dist/css/bootstrap-select.min.css">
+   <link rel="stylesheet" href="../public/dist/css/bootstrap-datepicker.min.css">
+   <link rel="stylesheet" href="../public/dist/css/daterangepicker.css">
   <!-- Font Awesome -->
   <link rel="stylesheet" href="../public/dist/css/font-awesome.min.css">
   <!-- Theme style -->
@@ -54,11 +61,12 @@ desired effect
   <header class="main-header">
 
     <!-- Logo -->
-    <a href="index.php" class="logo">
+    <a href="#" class="logo">
+    <img src="../public/dist/img/logo2.png" class="logo-mini" alt="Imagen Usuario">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>M</b>LN</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>M-</b>Line</span>
+      <span class="logo-lg"><b>M_</b>Line</span>
     </a>
 
     <!-- Header Navbar -->
@@ -73,9 +81,33 @@ desired effect
           <!-- Messages: style can be found in dropdown.less-->
           <li class="dropdown messages-menu">
             <!-- Menu toggle button -->
+            <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    const pNode = document.getElementById("saldoCaja");
+                    function ponerNCPySaldo() {
+
+                              $.post("../ajax/ajax_cajas.php?op=ponerNCPySaldo", { }, function(data, status) {
+                              data = JSON.parse(data);
+                              $("#ncpUsuario").val(data.numerocuenta);
+                              $("#saldoReal").val(data.saldo);
+                              pNode.innerText = data.saldo;
+
+                          });
+                      }
+
+                    setInterval(ponerNCPySaldo, 20000);
+                });
+            </script>
 
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <i class="fa fa-money"> 400.000</i>
+            <i class="fa fa-money"> 
+                <form name="formularioSaldo" id="formularioSaldo" method="post">
+                <input type="hidden" name="saldoReal" id="saldoReal" >
+                <input type="hidden" name="ncpUsuario" id="ncpUsuario">
+
+                </form>
+             </i> <i id="saldoCaja" >   </i> 
               <span class="label label-success">XAF</span>
             </a>
             <ul class="dropdown-menu">
@@ -87,7 +119,7 @@ desired effect
                     <a href="#">
                       <div class="pull-left">
                         <!-- User Image -->
-                        <img src="../public/dist/img/user2-160x160.jpg" class="img-circle" alt="Imagen Usuario">
+                        <img src="../public/dist/img/logo1.png" class="img-circle" alt="Imagen Usuario">
                       </div>
                       <!-- Message title and timestamp -->
                       <h4>
@@ -121,7 +153,7 @@ desired effect
                 <ul class="menu">
                   <li><!-- start notification -->
                     <a href="#">
-                      <i class="fa fa-users text-aqua"></i> 5 nuevos empleados reclutados
+                      <i class="fa fa-users text-aqua"></i> 5 nuevas agencias establecidas
                     </a>
                   </li>
                   <!-- end notification -->
@@ -172,14 +204,14 @@ desired effect
             <!-- Menu Toggle Button -->
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <!-- The user image in the navbar-->
-              <img src="../public/dist/img/user2-160x160.jpg" class="user-image" alt="Imagen Usuario">
+              <img src="../public/dist/img/logo1.png" class="user-image" alt="Imagen Usuario">
               <!-- hidden-xs hides the username on small devices so only the image appears. -->
               <span class="hidden-xs"><?php echo $_SESSION['nomcompleto']; ?></span>
             </a>
             <ul class="dropdown-menu">
               <!-- The user image in the menu -->
               <li class="user-header">
-                <img src="../public/dist/img/user2-160x160.jpg" class="img-circle" alt="Imagen Usuario">
+                <img src="../public/dist/img/logo1.png" class="img-circle" alt="Imagen Usuario">
 
                 <p>
                   <?php echo $_SESSION['nomcompleto']; ?> - <?php echo $_SESSION['cargo']; ?>
@@ -190,13 +222,13 @@ desired effect
               <li class="user-body">
                 <div class="row">
                   <div class="col-xs-4 text-center">
-                    <a href="#">Billetes</a>
+                    <a href="#">Wallet</a>
                   </div>
                   <div class="col-xs-4 text-center">
                     <a href="#">Envios</a>
                   </div>
                   <div class="col-xs-4 text-center">
-                    <a href="#">Recibos</a>
+                    <a href="#">Retiros</a>
                   </div>
                 </div>
                 <!-- /.row -->
@@ -207,14 +239,14 @@ desired effect
                   <a href="perfil.php" class="btn btn-default btn-flat">Perfil</a>
                 </div>
                 <div class="pull-right">
-                  <a href="../ajax/ajax_usuarios.php?op=salir" class="btn btn-default btn-flat">Salir</a>
+                  <a href="../ajax/ajax_usuarios.php?op=salir" class="btn bg-orange btn-flat">Salir</a>
                 </div>
               </li>
             </ul>
           </li>
           <!-- Control Sidebar Toggle Button -->
           <li>
-            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+            
           </li>
         </ul>
       </div>
@@ -229,10 +261,10 @@ desired effect
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="../public/dist/img/user2-160x160.jpg" class="img-circle" alt="Imagen Usuario">
+          <img src="../public/dist/img/logo1.png" class="img-circle" alt="Imagen Usuario">
         </div>
         <div class="pull-left info">
-          <p><?php echo $_SESSION['nomcompleto']; ?></p>
+          <p><?php echo $_SESSION['rol']; ?></p>
           <!-- Status -->
           <a href="#"> <i class="fa fa-circle text-success">  </i> Conectado</a>
         </div>
@@ -242,6 +274,7 @@ desired effect
       <form action="#" method="POST" id="formulariobuscar" class="sidebar-form">
         <div class="input-group">
           <input autocomplete="on" data-live-search="true" id="buscar" type="text" name="buscar" class="form-control selectpicker" placeholder="Buscar ...">
+          <input type="hidden" name="rolConnect" id="rolConnect" value="<?php echo $_SESSION['rol']; ?>">
           <span class="input-group-btn">
               <button type="submit"  name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
               </button>
@@ -255,11 +288,11 @@ desired effect
         <li class="header">MENU</li>
         <!-- Optionally, you can add icons to the links -->
         <li class=""><a href="escritorio.php"><i class="fa fa-laptop"></i> <span>Escritorio</span></a></li>
-        <li class="active"><a href="envios.php"><i class="fa fa-send"></i> <span>Envios</span></a></li>
-        <li><a href="recibos.php"><i class="fa fa-arrow-circle-o-down"></i> <span>Recibos</span></a></li>
-        <li class=""><a href="billetes.php"><i class="fa fa-plane"></i> <span>Billetes</span></a></li>
+        <li class=""><a href="envios.php"><i class="fa fa-send"></i> <span>Envios</span></a></li>
+        <li><a href="recibos.php"><i class="fa fa-arrow-circle-o-down"></i> <span>Retiros</span></a></li>
+       <!-- <li class=""><a href="billetes.php"><i class="fa fa-plane"></i> <span>Billetes</span></a></li> -->
         <li class=""><a href="empleados.php"><i class="fa fa-users"></i> <span>Empleados</span></a></li>
-        <li class=""><a href="empleados.php"><i class="fa fa-plane"></i> <span>Transacciones UV</span></a></li>
+        <li class=""><a href="#"><i class="fa fa-plane"></i> <span>Transacciones UV</span></a></li>
         <li class="treeview">
           <a href="#"><i class="fa fa-cubes"></i> <span>Administracion</span>
             <span class="pull-right-container">
@@ -267,15 +300,19 @@ desired effect
               </span>
           </a>
           <ul class="treeview-menu">
+           <li><a href="bancos.php"><i class="fa fa-bank"></i>Banco</a></li>
+           <li><a href="banco_comercial.php"><i class="fa fa-cc-mastercard"></i> Comercial</a></li>
+            <li><a href="clientes.php"><i class="fa fa-group "></i>Clientes</a></li>
             <li><a href="agencias.php"><i class="fa fa-home"></i>Agencias</a></li>
-            <li><a href="agencias.php"><i class="fa fa-bank"></i>Cuentas</a></li>
-            <li><a href="tasas.php"><i class="fa fa-circle-o"></i>Tasas envios</a></li>
+            <li><a href="cuentas.php"><i class="fa fa-bank"></i>Cuentas</a></li>
+            <li><a href="cajas.php"><i class="fa fa-briefcase"></i>Cajas</a></li>
+            <li><a href="tasas.php"><i class="fa fa-circle-o"></i>Tarifario envios</a></li>
             <li><a href="contabilidad.php"><i class="fa fa-file-excel-o"></i>Contabilidad</a></li>
-            <li><a href="rutas.php"><i class="fa fa-circle-o"></i>Rutas de vuelos</a></li>
+            <!-- <li><a href="rutas.php"><i class="fa fa-circle-o"></i>Rutas de vuelos</a></li> -->
             <li><a href="solicitudes.php"><i class="fa fa-envelope-o"></i>Solicitudes</a></li>
             <li><a href="paises.php"><i class="fa fa-map-signs"></i>Paises</a></li>
             <li><a href="usuarios.php"><i class="fa fa-user"></i>Usuarios</a></li>
-			<li><a href="permiso.php"><i class="fa fa-lock"></i>Permisos</a></li>
+			      <li><a href="permiso.php"><i class="fa fa-lock"></i>Permisos</a></li>
           </ul>
         </li>
                 <li class="treeview">
@@ -286,14 +323,15 @@ desired effect
           </a>
           <ul class="treeview-menu">
             <li><a href="consultas_envios.php"><i class="fa fa-send"></i>Envios</a></li>
-            <li><a href="consultas_recibos.php"><i class="fa fa-arrow-circle-o-down"></i>Recibos</a></li>
+            <li><a href="consultas_recibos.php"><i class="fa fa-arrow-circle-o-down"></i>Retiros</a></li>
+            <li><a href="consultas_operaciones.php"><i class="fa fa-book"></i>Operaciones</a></li>
           </ul>
         </li>
         <li><a href="javascript:alert('Contacte con el Soporte tecnico desarrolladores de la aplicación')"><i class="fa fa-plus-square"></i> <span>Ayuda</span><small class="label pull-right bg-red">PDF</small></a></li>
         <li>
               <a href="#">
                 <i class="fa fa-info-circle"></i> <span>Acerca De...</span>
-                <small class="label pull-right bg-yellow">ECUATUR</small>
+                <small class="label pull-right bg-yellow">M_LINE</small>
               </a>
         </li>
       </ul>

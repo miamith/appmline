@@ -23,7 +23,7 @@ switch ($_GET["op"]){
 	case 'guardaryeditar':
 		if (empty($idempleado)){
 			$rspta=$consulta->insertar($ap,$DNIremitente,$cargo,$rol,$salario,$agenciaA,$pais,$ciudad,$interno,$_SESSION['ap'],$feinicioempleo,$nomcompleto,$tel,$direccion);
-			echo $rspta ? "Empleado registrado" : "xxxxEmpleado no se pudo registrar";
+			echo $rspta ? "Empleado registrado" : "Empleado no se pudo registrar";
 		}
 		else {
 			$rspta=$consulta->editar($idempleado,$ap,$DNIremitente,$cargo,$rol,$salario,$agenciaA,$pais,$ciudad,$interno,
@@ -78,5 +78,21 @@ switch ($_GET["op"]){
  		echo json_encode($results);
 
 	break;
+
+
+		// Buscar  si el DIP existe ya en uso
+		case 'validarDIP':
+		  $rspta=$consulta->validarDIP($DNIremitente);
+		   //Codificar el resultado utilizando json
+		  echo json_encode($rspta);
+	  break;
+
+
+	  	// Buscar  si el AP existe ya en uso
+		case 'validarAP':
+			$rspta=$consulta->validarAP($ap);
+			 //Codificar el resultado utilizando json
+			echo json_encode($rspta);
+		break;
 }
 ?>

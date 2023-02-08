@@ -26,6 +26,7 @@ function limpiar() {
     $("#porcenenviopaq").val("");
     $("#porcenrecibirpaq").val("");
     $("#partnerapi").val("");
+    $("#prefijoTel").val("");
 
 }
 
@@ -118,6 +119,7 @@ function mostrar(idpais) {
         $("#porcenenviopaq").val(data.porcenENVIO_PAQ);
         $("#porcenrecibirpaq").val(data.porcenRECI_PAQ);
         $("#partnerapi").val(data.partnerAPI);
+        $("#prefijoTel").val(data.prefijoTel);
 
     });
 }

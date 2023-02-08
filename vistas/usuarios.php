@@ -32,6 +32,7 @@ if ($_SESSION['usuarios']==1)
                             <th>Opciones</th>
                             <th>Nombre</th>
                             <th>Login</th>
+                            <th>Rol</th>
                             <th>Permisos</th>
                             <th>Estado</th>
                             <th>Fecha</th>
@@ -43,6 +44,7 @@ if ($_SESSION['usuarios']==1)
                             <th>Opciones</th>
                             <th>Nombre</th>
                             <th>Login</th>
+                            <th>Rol</th>
                             <th>Permisos</th>
                             <th>Estado</th>
                             <th>Fecha</th>

@@ -104,7 +104,6 @@ function guardaryeditar(e) {
         data: formData,
         contentType: false,
         processData: false,
-
         success: function(datos) {
 
             bootbox.alert(datos);
@@ -152,6 +151,41 @@ function eliminar(idempleado) {
             });
         }
     });
+}
+
+
+// Buscar el el DIP y evitar repetirse
+function validarDIP() {
+    var DNIremitente = $("#DNIremitente").val();
+
+    $.post("../ajax/ajax_empleado.php?op=validarDIP", { DNIremitente: DNIremitente }, function(data, status) {
+        if (data != null & DNIremitente != "" & DNIremitente != " ") {
+            data = JSON.parse(data);
+            $("#DNIremitente").val("");
+            bootbox.alert('Numero de DIP ya en uso, no se puede repetir, si es AGENTE SIMPLE añade 15 al final');
+
+            //$("#DNIremitente").attr('readonly', true)
+        }
+
+    })
+
+}
+
+// Buscar el AP y evitar repetirse
+function validarAP() {
+    var ap = $("#ap").val();
+
+    $.post("../ajax/ajax_empleado.php?op=validarAP", { ap: ap }, function(data, status) {
+        if (data != null & ap != "" & ap != " ") {
+            data = JSON.parse(data);
+            $("#ap").val("");
+            bootbox.alert('Login ya en uso, no se puede repetir, revisa la serie en empleados buscando');
+
+            //$("#DNIremitente").attr('readonly', true)
+        }
+
+    })
+
 }
 
 

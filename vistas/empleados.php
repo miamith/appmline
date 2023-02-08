@@ -77,7 +77,7 @@ if ($_SESSION['empleados']==1)
                           </div>
                            <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <label>DNI (*):</label>
-                            <input type="text" class="form-control" name="DNIremitente" id="DNIremitente" maxlength="10" placeholder="DNI del empleado" required>
+                            <input onmouseout="validarDIP()" type="number" class="form-control" name="DNIremitente" id="DNIremitente" maxlength="10" placeholder="DNI del empleado" required>
                           </div>
                           <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <label>Telefono:</label>
@@ -94,16 +94,17 @@ if ($_SESSION['empleados']==1)
                           <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <label>Rol (Tipo usuario):</label>
                             <select  class="form-control selectpicker" data-live-search="true" name="rol" id="rol" >
-                                    <option value='Supervisor'>Supervisor</option>
-                                    <option value='Administrador'>Administrador</option>
-                                    <option value='CajeroUV'>Cajero UV</option>
-                                    <option value='Agencia'>Agencia</option>
-                                    <option value='Cajero'>Cajero</option>
+                                    <option value="Supervisor">Supervisor</option>
+                                    <option value="Administrador">Administrador</option>
+                                    <option value="CajeroUV">Cajero UV</option>
+                                    <option value="Agencia">Agencia M</option>
+                                    <option value="AgenciaS">Agencia S</option>
+                                    <option value="Cajero">Cajero</option>
                             </select>
                           </div>
                           <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <label>Login acceso:</label>
-                            <input type="text" class="form-control" name="ap" id="ap" maxlength="8" placeholder="Login usuario, Ej. ap001531" required>
+                            <input onmouseout="validarAP()" type="text" class="form-control" name="ap" id="ap" maxlength="8" placeholder="Login usuario, Ej. ap001531" required>
                           </div>
                           <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <label>Pais de trabajo:</label>
@@ -120,9 +121,9 @@ if ($_SESSION['empleados']==1)
                           </div>
                           <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
                             <label>Trabaja Interno?:</label>
-                            <select  class="form-control selectpicker" data-live-search="true" name="rol" id="rol" >
-                                    <option value='1'>Interno</option>
-                                    <option value='0'>Externo</option>
+                            <select  class="form-control selectpicker" data-live-search="true" name="interno" id="interno" >
+                                    <option value="SI">Interno</option>
+                                    <option value="NO">Externo</option>
                             </select>
                           </div>
                           <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
@@ -135,7 +136,7 @@ if ($_SESSION['empleados']==1)
                             </select>
                           </div>
                           <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn btn-success" type="submit" id="btnGuardar"><i class="fa fa-save"></i> Guardar</button>
+                            <button onmouseout="validarAP()" class="btn btn-success" type="submit" id="btnGuardar"><i class="fa fa-save"></i> Guardar</button>
                             <button class="btn btn-danger" onclick="cancelarform()" type="button"><i class="fa fa-arrow-circle-left"></i> Cancelar</button>
                           </div>
                         </form>

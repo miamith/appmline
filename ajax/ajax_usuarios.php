@@ -12,6 +12,7 @@ $apU=isset($_POST["apU"])? limpiarCadena($_POST["apU"]):"";
 $idempleado=isset($_POST["idempleado"])? limpiarCadena($_POST["idempleado"]):"";
 
 
+
 switch ($_GET["op"]){
 	case 'guardaryeditar':
 	//Hash SHA256 en la contraseña
@@ -19,7 +20,7 @@ switch ($_GET["op"]){
 
 		if (empty($apU)){
 			$rspta=$consulta->insertar($ap,$clavehash,$condicion,$_POST["permiso"]);
-			echo $rspta ? "Usuario registrado" : "No se pudieron registrar todos los datos del usuario";
+			//echo $rspta ? "Usuario registrado" : "No se pudieron registrar todos los datos del usuario";
 		}
 		else {
 			$rspta=$consulta->editar($idempleado,$clavehash,$condicion,$_POST["permiso"]);
@@ -49,10 +50,11 @@ switch ($_GET["op"]){
  					' <a title="Editar" href="#" onclick="mostrar('.$reg->idempleado.')"><i class="fa fa-edit"></i></a>',
  				"1"=>$reg->nomcompleto,
  				"2"=>$reg->ap,
- 				"3"=>($reg->permisos==0)?'<span class="label bg-red">Vea permisos</span>':'<span class="label bg-green">'.$reg->permisos.'</span>',
- 				"4"=>($reg->condicion==1)?'<span class="label bg-green">Activado</span>':'<span class="label bg-red">Desactivado</span>',
- 				"5"=>$reg->fecrea,
- 				"6"=>$reg->agecrea
+				"3"=>$reg->rol,
+ 				"4"=>($reg->permisos==0)?'<span class="label bg-red">Vea permisos</span>':'<span class="label bg-green">'.$reg->permisos.'</span>',
+ 				"5"=>($reg->condicion==1)?'<span class="label bg-green">Activado</span>':'<span class="label bg-red">Desactivado</span>',
+ 				"6"=>$reg->fecrea,
+ 				"7"=>$reg->agecrea
  				);
  		}
  		$results = array(
@@ -68,13 +70,26 @@ switch ($_GET["op"]){
 		require_once "../modelos/class_Usuario.php";
 		$cons = new Usuario();
 
-		$rspta = $cons->selectEmpleado();
-
+		$rspta = $cons->selectEmpleado($_SESSION['pais'],$_SESSION['agencia_em'],$_SESSION['rol'],$_SESSION['ap']);
+					echo '<option value="">Selecciona empleado</option>';
 		while ($reg = $rspta->fetch_object())
 				{
 					echo '<option value=' . $reg->idempleado . '>' . $reg->ap . '-' . $reg->nomcompleto . '</option>';
 				}
 		break;
+
+
+		case "selectEmpleadoAP":
+			require_once "../modelos/class_Usuario.php";
+			$cons = new Usuario();
+	
+			$rspta = $cons->selectEmpleadoAP($_SESSION['pais'],$_SESSION['agencia_em'],$_SESSION['rol'],$_SESSION['ap']);
+						echo '<option value="">Selecciona empleado</option>';
+			while ($reg = $rspta->fetch_object())
+					{
+						echo '<option value=' . $reg->ap . '>' . $reg->ap . '-' . $reg->nomcompleto . '</option>';
+					}
+			break;
 	
 		case 'permisos':
 		//Obtenemos todos los permisos de la tabla permisos
@@ -125,7 +140,13 @@ switch ($_GET["op"]){
 	        $_SESSION['cargo']=$fetch->cargo;
 	        $_SESSION['direccion']=$fetch->direccion;
 	        $_SESSION['agencia_em']=$fetch->agencia_em;
-
+			$_SESSION['pais']=$fetch->pais;
+			$_SESSION['rol']=$fetch->rol; 
+			$_SESSION['interno']=$fetch->interno;
+			$_SESSION['ncpCorriente']=$fetch->ncpCorriente;
+			$_SESSION['ncpComisiones']=$fetch->ncpComisiones;
+			$_SESSION['caja']=$fetch->caja;
+			$_SESSION['prefijoTel']=$fetch->prefijoTel;
 	        //Obtenemos los permisos del usuario
 	    	$marcados = $consulta->listarmarcados($fetch->idempleado);
 
@@ -153,6 +174,13 @@ switch ($_GET["op"]){
 			in_array(12,$valores)?$_SESSION['contabilidad']=1:$_SESSION['contabilidad']=0;
 			in_array(13,$valores)?$_SESSION['acceso']=1:$_SESSION['acceso']=0;
 			in_array(14,$valores)?$_SESSION['paises']=1:$_SESSION['paises']=0;
+			in_array(15,$valores)?$_SESSION['clientes']=1:$_SESSION['clientes']=0;
+			in_array(16,$valores)?$_SESSION['cuentas']=1:$_SESSION['cuentas']=0;
+			in_array(17,$valores)?$_SESSION['cajas']=1:$_SESSION['cajas']=0;
+			in_array(18,$valores)?$_SESSION['operaciones']=1:$_SESSION['operaciones']=0;
+			in_array(19,$valores)?$_SESSION['banco']=1:$_SESSION['banco']=0;
+			in_array(20,$valores)?$_SESSION['banco_comercial']=1:$_SESSION['banco_comercial']=0;
+
 
 
 	    }

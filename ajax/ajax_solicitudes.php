@@ -69,7 +69,7 @@ switch ($_GET["op"]){
  				"1"=>$reg->codigoh,
  				"2"=>$reg->nomcompletoch,
  				"3"=>$reg->nomcomplerh,
- 				"4"=>number_format($reg->montoh, 0, '', '.'),
+ 				"4"=>number_format($reg->montoh, 0, '', ','),
  				"5"=>'<div class="direct-chat-text" style="margin:0;">'.$reg->descripcion.'</div>',
  				"6"=>$reg->operacion,
  				"7"=>$reg->agentcreh,

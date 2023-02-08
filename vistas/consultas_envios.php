@@ -18,7 +18,7 @@ if ($_SESSION['consultas']==1)
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Consultas envios por fechas y cliente
+        Consultas envios de efectivo por fechas y cliente
       </h1>
     </section>
 

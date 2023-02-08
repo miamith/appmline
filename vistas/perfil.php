@@ -31,6 +31,7 @@ if ($_SESSION['usuarios']==1)
                             <th>Opciones</th>
                             <th>Nombre</th>
                             <th>Login</th>
+                            <th>rol</th>
                             <th>Creado por</th>
                           </thead>
                           <tbody>                            
@@ -39,6 +40,7 @@ if ($_SESSION['usuarios']==1)
                             <th>Opciones</th>
                             <th>Nombre</th>
                             <th>Login</th>
+                            <th>rol</th>
                             <th>Creado por</th>
                           </tfoot>
                         </table>
@@ -48,7 +50,7 @@ if ($_SESSION['usuarios']==1)
                         <form name="formulario" id="formulario" method="POST">
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                           <input type="hidden" name="ap" id="ap">
-                          <input type="hidden" name="idEmpleado" id="idEmpleado">
+                          <input type="hidden" name="idempleado" id="idempleado">
                             <label>Nueva contraseña *:</label>
                             <input  type="password" class="form-control" name="nuevaPass" id="nuevaPass" maxlength="20" placeholder="Contraseña nueva" required>
                           </div>
@@ -57,7 +59,7 @@ if ($_SESSION['usuarios']==1)
                             <input type="password" class="form-control" name="nuevaPassConfirma" id="nuevaPassConfirma" maxlength="20" placeholder="Confirmar contraseña" required>
                           </div>
                           <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <button class="btn btn-success" onmouseover="verificar()" type="submit" id="btnGuardar"><i class="fa fa-save"></i> Cambiar</button>
+                            <button class="btn btn-success" onmouseover="" type="submit" id="btnGuardar"><i class="fa fa-save"></i> Cambiar</button>
 
                             <button class="btn btn-danger" onclick="cancelarform()" type="button"><i class="fa fa-arrow-circle-left"></i> Cancelar</button>
                           </div>

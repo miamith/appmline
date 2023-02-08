@@ -1,8 +1,10 @@
 <?php 
 session_start();
 require_once "../modelos/class_Envios_recibos.php";
-
+require_once "../modelos/class_SMS.php";
 $envio=new Persona();
+$notificacion=new Mensajeria();
+
 
 $idtransaccion=isset($_POST["idtransaccion"])? limpiarCadena($_POST["idtransaccion"]):"";
 $idreceptor=isset($_POST["idreceptor"])? limpiarCadena($_POST["idreceptor"]):"";
@@ -13,13 +15,19 @@ $telefonorec=isset($_POST["telefonorec"])? limpiarCadena($_POST["telefonorec"]):
 $dirremitente=isset($_POST["dirremitente"])? limpiarCadena($_POST["dirremitente"]):"";
 $dirreceptor=isset($_POST["dirreceptor"])? limpiarCadena($_POST["dirreceptor"]):"";
 $DNIremitente=isset($_POST["DNIremitente"])? limpiarCadena($_POST["DNIremitente"]):"";
-$DNIreceptor=isset($_POST["DNIreceptor"])? limpiarCadena($_POST["DNIreceptor"]):"";
+$DNIreceptor=isset($_POST["DNIreceptor"])? limpiarCadena($_POST["DNIreceptor"]):""; // TODO: del formulario pago
 $tipo=isset($_POST["tipo"])? limpiarCadena($_POST["tipo"]):"";
 $monto=isset($_POST["monto"])? limpiarCadena($_POST["monto"]):"";
 $comision=isset($_POST["comision"])? limpiarCadena($_POST["comision"]):"";
-$agenciaA=isset($_POST["agenciaA"])? limpiarCadena($_POST["agenciaA"]):"";
-$agenciaB=isset($_POST["agenciaB"])? limpiarCadena($_POST["agenciaB"]):"";
 $descripcion=isset($_POST["descripcion"])? limpiarCadena($_POST["descripcion"]):"";
+$secreto=isset($_POST["secreto"])? limpiarCadena($_POST["secreto"]):"";
+$pais_destino=isset($_POST["pais_destino"])? limpiarCadena($_POST["pais_destino"]):"";
+$comi_remi=isset($_POST["comi_remi"])? limpiarCadena($_POST["comi_remi"]):"";
+$comi_benef=isset($_POST["comi_benef"])? limpiarCadena($_POST["comi_benef"]):"";
+$aCobrar=isset($_POST["aCobrar"])? limpiarCadena($_POST["aCobrar"]):"";
+$cobrar=isset($_POST["cobrar"])? limpiarCadena($_POST["cobrar"]):""; //TODO: Este es del formulario de pagar
+
+
 // Bloque solicitud y validacion
 $idtransaccionsms=isset($_POST["idtransaccionsms"])? limpiarCadena($_POST["idtransaccionsms"]):"";
 $idsolicitud=isset($_POST["idsolicitud"])? limpiarCadena($_POST["idsolicitud"]):"";
@@ -30,38 +38,168 @@ $nomcompleto=isset($_POST["nomcompleto"])? limpiarCadena($_POST["nomcompleto"]):
 $nomcompler=isset($_POST["nomcompler"])? limpiarCadena($_POST["nomcompler"]):"";
 $existeR=isset($_POST["existeR"])? limpiarCadena($_POST["existeR"]):"";
 $existeC=isset($_POST["existeC"])? limpiarCadena($_POST["existeC"]):"";
+$referenciaAc=isset($_POST["referenciaAc"])? limpiarCadena($_POST["referenciaAc"]):"";
 $codigoAc=isset($_POST["codigoAc"])? limpiarCadena($_POST["codigoAc"]):"";
+$telr=isset($_POST["telr"])? limpiarCadena($_POST["telr"]):"";
 $idbkhis=isset($_POST["idbkhis"])? limpiarCadena($_POST["idbkhis"]):"";
-$codigo=$envio->generarCodigo(6);
+
+$codigo=$envio->generarCodigo(8);
+$referencia=$envio->generarCodigo(12);
+
+// Campo de buscar envio a cobrar
+$codigoB=isset($_POST["codigo"])? limpiarCadena($_POST["codigo"]):""; 
 
 switch ($_GET["op"]){
+
 	case 'guardaryeditar':
-		if (empty($idtransaccion) && empty($existeR) && empty($existeC)){ // Ese codigo si.
-			$rspta=$envio->insertar($nombreremitente,$nombrereceptor,$telefonorem,$telefonorec,$dirremitente,$_SESSION['ap'],$dirreceptor,$DNIremitente,$DNIreceptor,$tipo,$monto,$comision,$agenciaA,$agenciaB,$codigo,$descripcion);
-			echo $rspta ? "Envio registrado" : "Envio no se pudo registrar";
-			echo '<script> window.open("../reportes/exTicket2.php?id='.$codigo.'","_blank"); </script>';
-		}
-		elseif (empty($idtransaccion) && !empty($existeR) && !empty($existeC)) { // se usa
-			$rspta=$envio->insertarCopia($nombreremitente,$telefonorem,$dirremitente,$DNIreceptor,$nombrereceptor,$telefonorec,$dirreceptor,$DNIremitente,$idreceptor,$agenciaA,$agenciaB,$tipo,$monto,$comision,$codigo,$descripcion,$_SESSION['ap']);
-			echo $rspta ? "Envio con copia remitente y receptor realizado " : "Envio copia remitente y receptor no se pudo realizar";
-			echo '<script> window.open("../reportes/exTicket2.php?id='.$codigo.'","_blank"); </script>';
 
-		}elseif (empty($idtransaccion) && !empty($existeR) && empty($existeC)){ // se usa tampoco
-			$rspta=$envio->insertarCopiaR($nombreremitente,$telefonorem,$dirremitente,$DNIreceptor,$nombrereceptor,$telefonorec,$dirreceptor,$DNIremitente,$idreceptor,$agenciaA,$agenciaB,$tipo,$monto,$comision,$codigo,$descripcion,$_SESSION['ap']);
-			echo $rspta ? "Envio con copia remitente realizado " : "Envio copia remitente no se pudo realizar";
-			echo '<script> window.open("../reportes/exTicket2.php?id='.$codigo.'","_blank"); </script>';
+// Comisiones desde la BD:  idTasas,comisiont, moneda, IVA,porcenENVIO,porcenRECIBIR
+$respuesCom=$envio -> comisiones2($monto,$pais_destino, $_SESSION['pais']);
+$regComision = $respuesCom-> fetch_object();
+$comisiontDB=$regComision->comisiont;
+$moneda=$regComision->moneda;
+$IVAconfig=$regComision->IVA;
+$porcenENVIO=$regComision->porcenENVIO;
+$porcenRECIBIR=$regComision->porcenRECIBIR;
+// Operar saldos
+$IVA=($comisiontDB * $IVAconfig)/100;
+$comReparto=($comisiontDB - $IVA);
+$comi_remi=($comReparto * $porcenENVIO)/100;
+$comi_benef=($comReparto * $porcenRECIBIR)/100;
+$comi_empre=($comReparto - $comi_remi - $comi_benef);
 
-		}else{ // Ese codigo si
-			$rspta=$envio->editar($idtransaccion,$idreceptor,$nombreremitente,$nombrereceptor,$telefonorem,$telefonorec,$dirremitente,$_SESSION['ap'],$dirreceptor,$DNIremitente,$DNIreceptor,$tipo,$monto,$comision,$codigoAc,$agenciaA,$agenciaB,$descripcion,$idreceptor);
-			echo $rspta ? "Envio de solicitud realizado" : "Envio de solicitud no se pudo realizar";
-			//echo '<script> window.open("../reportes/exTicket.php?id='.$idtransaccion.'","_blank"); </script>';
+
+// Verificar saldo Remitente
+$respuestaAgente=$envio-> verificarSaldo($_SESSION['DNI'],$_SESSION['ap'], $_SESSION['ncpCorriente'], $_SESSION['ncpComisiones']);
+$regAgente = $respuestaAgente->fetch_object();
+$saldoNCPcorriente=(int)$regAgente->saldoNCPcorriente;
+$saldoNCPcomisiones=(int)$regAgente->saldoNCPcomisiones;
+$NCPcorriente=$regAgente->NCPcorriente;
+$NCPcomisiones=$regAgente->NCPcomisiones;
+// Operar saldos
+$saldoAgenRemitRestanteNCorri=($saldoNCPcorriente - $monto - $comisiontDB);
+$saldo_rescuenta=($saldoNCPcorriente - $comisiontDB - $monto);
+$cobrar=($monto - $comisiontDB);
+$saldoNCPcomisionesFINAL=($saldoNCPcomisiones + $comi_remi);
+	// Regular saldo Beneficiario
+
+// TOMAR LAS CUENTAS DE EMPRESA IVA Y COMISIONES
+$respuestaMline=$envio-> verificarSaldoMLINE();
+$regSistema = $respuestaMline->fetch_object();
+
+$NCPcomisionesMLINE=(int)($regSistema->NCPcomisionesMLINE);
+$NCPivaMLINE=($regSistema->NCPivaMLINE);
+$saldoNCPcomisionesMLINE=(int)($regSistema->saldoNCPcomisionesMLINE + $comi_empre);
+$saldoNCPivaMLINE=(int)($regSistema->saldoNCPivaMLINE + $IVA);
+	
+// VERFICAR SALDO ANTES DE ENVIAR
+
+if($monto > $saldoNCPcorriente){ // INCIO SI HAY SALDO
+
+	echo "Saldo insuficiente, no se ha podido realizar el envio";
+
+} else{
+
+	if (empty($idtransaccion) && empty($existeR) && empty($existeC)){ // Ese codigo si.
+		$rspta=$envio->insertar($referencia,$nombreremitente,$nombrereceptor,$telefonorem,$telefonorec,$dirremitente,
+		$_SESSION['ap'],$dirreceptor,$DNIremitente,$tipo,$monto,$comision,$_SESSION['agencia_em'],
+		$codigo,$secreto,$comi_empre, $comi_remi,$comi_benef,$IVA,$saldo_rescuenta,$cobrar,
+		$saldoNCPcomisionesFINAL,$NCPcomisiones,$NCPcorriente,
+		$pais_destino, $descripcion,$_SESSION['pais'],$_SESSION['caja'],
+		$NCPcomisionesMLINE,$NCPivaMLINE,$saldoNCPcomisionesMLINE,$saldoNCPivaMLINE);
+		echo $rspta ? "Envio registrado" : "Envio no se pudo registrar";
+		// ENVIAR MENSAJE MOVIL
+		if ($rspta) {
+			$smsRemitente="♻ Su transferencia de dinero a .$nombrereceptor.  
+			código .$codigo. ha sido efectuada con éxito, gracias por confiar en nosotros";
+			$smsReceptor="♻ Ha recibido una transferencia de dinero de .$nombreremitente., código .$codigo., 
+			diríjase a cualquier punto de M_lineMoney con su DIP o Pasaporte";
+			$respuesta=$notificacion-> SMS($smsRemitente,($respuesta=$notificacion-> prefijoTel($_SESSION['pais'])).$telefonorem);
+			$respuesta=$notificacion-> SMS($smsReceptor,($respuesta=$notificacion-> prefijoTel($pais_destino)).$telefonorec);
 		}
+		echo '<script> window.open("../reportes/exTicket2.php?id='.$codigo.'","_blank"); </script>';
+
+	}
+	elseif (empty($idtransaccion) && !empty($existeR) && !empty($existeC)) { // se usa
+		$rspta=$envio->insertarCopia($referencia,$nombreremitente,$nombrereceptor,$telefonorem,$telefonorec,$dirremitente,
+		$_SESSION['ap'],$dirreceptor,$DNIremitente,$tipo,$monto,$comision,$_SESSION['agencia_em'],
+		$codigo,$secreto,$comi_empre, $comi_remi,$comi_benef,$IVA,$saldo_rescuenta,$cobrar,
+		$saldoNCPcomisionesFINAL,$NCPcomisiones,$NCPcorriente,
+		$pais_destino, $descripcion,$_SESSION['pais'],$_SESSION['caja'],$idreceptor,
+		$NCPcomisionesMLINE,$NCPivaMLINE,$saldoNCPcomisionesMLINE,$saldoNCPivaMLINE);
+		echo $rspta ? "Envio con copia del remitente y receptor realizado " : "Envio copia remitente y receptor no se pudo realizar";
+		// ENVIAR MENSAJE MOVIL
+		if ($rspta) {
+			$smsRemitente="♻ Su transferencia de dinero a .$nombrereceptor.  
+			código .$codigo. ha sido efectuada con éxito, gracias por confiar en nosotros";
+			$smsReceptor="♻ Ha recibido una transferencia de dinero de .$nombreremitente., código .$codigo., 
+			diríjase a cualquier punto de M_lineMoney con su DIP o Pasaporte";
+			$respuesta=$notificacion-> SMS($smsRemitente,($respuesta=$notificacion-> prefijoTel($_SESSION['pais'])).$telefonorem);
+			$respuesta=$notificacion-> SMS($smsReceptor,($respuesta=$notificacion-> prefijoTel($pais_destino)).$telefonorec);
+		}
+		echo '<script> window.open("../reportes/exTicket2.php?id='.$codigo.'","_blank"); </script>';
+
+	}elseif (empty($idtransaccion) && !empty($existeR) && empty($existeC)){ // se usa tampoco
+		$rspta=$envio->insertarCopiaR($referencia,$nombreremitente,$nombrereceptor,$telefonorem,$telefonorec,$dirremitente,
+		$_SESSION['ap'],$dirreceptor,$DNIremitente,$tipo,$monto,$comision,$_SESSION['agencia_em'],
+		$codigo,$secreto,$comi_empre, $comi_remi,$comi_benef,$IVA,$saldo_rescuenta,$cobrar,
+		$saldoNCPcomisionesFINAL,$NCPcomisiones,$NCPcorriente,
+		$pais_destino, $descripcion,$_SESSION['pais'],$_SESSION['caja'],
+		$NCPcomisionesMLINE,$NCPivaMLINE,$saldoNCPcomisionesMLINE,$saldoNCPivaMLINE);
+		echo $rspta ? "Envio con copia del remitente realizado " : "Envio copia remitente no se pudo realizar";
+		// ENVIAR MENSAJE MOVIL
+		if ($rspta) {
+			$smsRemitente="♻ Su transferencia de dinero a .$nombrereceptor.  
+			código .$codigo. ha sido efectuada con éxito, gracias por confiar en nosotros";
+			$smsReceptor="♻ Ha recibido una transferencia de dinero de .$nombreremitente., código .$codigo., 
+			diríjase a cualquier punto de M_lineMoney con su DIP o Pasaporte";
+			$respuesta=$notificacion-> SMS($smsRemitente,($respuesta=$notificacion-> prefijoTel($_SESSION['pais'])).$telefonorem);
+			$respuesta=$notificacion-> SMS($smsReceptor,($respuesta=$notificacion-> prefijoTel($pais_destino)).$telefonorec);
+		}
+		echo '<script> window.open("../reportes/exTicket2.php?id='.$codigo.'","_blank"); </script>';
+	
+	}elseif (empty($idtransaccion) && empty($existeR) && !empty($existeC)){ // se usa tampoco
+		$rspta=$envio->insertarCopiaBen($referencia,$nombreremitente,$nombrereceptor,$telefonorem,$telefonorec,$dirremitente,
+		$_SESSION['ap'],$dirreceptor,$DNIremitente,$tipo,$monto,$comision,$_SESSION['agencia_em'],
+		$codigo,$secreto,$comi_empre, $comi_remi,$comi_benef,$IVA,$saldo_rescuenta,$cobrar,
+		$saldoNCPcomisionesFINAL,$NCPcomisiones,$NCPcorriente,
+		$pais_destino, $descripcion,$_SESSION['pais'],$_SESSION['caja'],$idreceptor,
+		$NCPcomisionesMLINE,$NCPivaMLINE,$saldoNCPcomisionesMLINE,$saldoNCPivaMLINE);
+		echo $rspta ? "Envio con copia del beneficiario realizado " : "Envio copia remitente no se pudo realizar";
+		// ENVIAR MENSAJE MOVIL
+		if ($rspta) {
+			$smsRemitente="♻ Su transferencia de dinero a .$nombrereceptor.  
+			código .$codigo. ha sido efectuada con éxito, gracias por confiar en nosotros";
+			$smsReceptor="♻ Ha recibido una transferencia de dinero de .$nombreremitente., código .$codigo., 
+			diríjase a cualquier punto de M_lineMoney con su DIP o Pasaporte";
+			$respuesta=$notificacion-> SMS($smsRemitente,($respuesta=$notificacion-> prefijoTel($_SESSION['pais'])).$telefonorem);
+			$respuesta=$notificacion-> SMS($smsReceptor,($respuesta=$notificacion-> prefijoTel($pais_destino)).$telefonorec);
+		}
+		echo '<script> window.open("../reportes/exTicket2.php?id='.$codigo.'","_blank"); </script>';
+		
+
+	
+	}else{ // Ese codigo si ES PARA MANDAR UNA MODIFICACION DE ALGUN DATO ERRONEO EN EL ENVIO
+		$rspta=$envio->editar($referenciaAc,$codigoAc,$idtransaccion,$referencia,$nombreremitente,$nombrereceptor,$telefonorem,$telefonorec,$dirremitente,
+		$_SESSION['ap'],$dirreceptor,$DNIremitente,$tipo,$monto,$comision,$_SESSION['agencia_em'],
+		$codigo,$secreto,$comi_empre, $comi_remi,$comi_benef,$IVA,$saldo_rescuenta,$cobrar,
+		$saldoNCPcomisionesFINAL,$NCPcomisiones,$NCPcorriente,
+		$pais_destino, $descripcion,$_SESSION['pais'],$_SESSION['caja'],$idreceptor,
+		$NCPcomisionesMLINE,$NCPivaMLINE,$saldoNCPcomisionesMLINE,$saldoNCPivaMLINE);
+		echo $rspta ? "Envio de solicitud de modificacion realizado" : "Envio de solicitud no se pudo realizar";
+		//echo '<script> window.open("../reportes/exTicket.php?id='.$idtransaccion.'","_blank"); </script>';
+	}
+
+
+
+}  // FIN SI HAY SALDO
+
 
 	break;
 
 	case 'eliminar':
 		$rspta=$envio->eliminar($idtransaccion,$_SESSION['ap']);
- 		echo $rspta ? "Envio eliminado o cancelado" : "Envio no se puede eliminar o cancelar";
+ 		echo $rspta ? "Envio eliminado o cancelado PASACION DE DINERO FISICO" : "Envio no se puede eliminar o cancelar";
 	break;
 
 	case 'mostrar':
@@ -77,7 +215,7 @@ switch ($_GET["op"]){
 	break;
 
 	case 'listarEnvios':
-		$rspta=$envio->listarEnvios($_SESSION['agencia_em']);
+		$rspta=$envio->listarEnvios($_SESSION['agencia_em'],$_SESSION['ap'],$_SESSION['rol']);
  		//Vamos a declarar un array
  		$data= Array();
 
@@ -85,19 +223,22 @@ switch ($_GET["op"]){
  			$data[]=array(
  				"0"=>($reg->estadot=='Pendiente')?
  					' <a title="Editar enviando solicitud" href="#" onclick="mostrar('.$reg->idtransaccion.')"><i class="fa fa-edit"></i></a>'.
- 					' <a title="Imprimir ticket" target="_blank" href="../reportes/exTicket.php?id='.$reg->idtransaccion.'" onclick="verTiket('.$reg->idtransaccion.')"><i class="fa fa-ticket"></i></a>':
+ 					' <a title="Imprimir ticket" target="_blank" href="../reportes/exTicket.php?id='.$reg->idtransaccion.'" onclick="verTiket('.$reg->idtransaccion.')"><i class="fa fa-ticket"></i></a>'
+					:
  					' <a title="Recibido o revalidar" href="#" onclick="mostrar('.$reg->idtransaccion.')"><i class="fa fa-edit"></i></a>'.
- 					' <a title="Imprimir ticket" target="_blank" href="../reportes/exTicket.php?id='.$reg->idtransaccion.'" ><i class="fa fa-ticket"></i></a>',
+ 					' <a title="Imprimir ticket" target="_blank" href="../reportes/exTicket2.php?id='.$reg->codigo.'" ><i class="fa fa-ticket"></i></a>',
  				"1"=>$reg->nomcompleto,
  				"2"=>$reg->tel,
- 				"3"=>number_format($reg->monto, 0, '', '.'),
- 				"4"=>number_format($reg->comision, 0, '', '.'),
- 				"5"=>$reg->codigo,
- 				"6"=>$reg->agenciaA,
- 				"7"=>$reg->nomcompler,
- 				"8"=>$reg->agenciaB,
- 				"9"=>$reg->fecrea,
- 				"10"=>($reg->estadot=='Pendiente')?'<span class="label bg-orange">'.$reg->estadot.'</span>':
+ 				"3"=>number_format($reg->monto, 0, '', ','),
+				"4"=>number_format($reg->cobrar, 0, '', ','),
+ 				"5"=>number_format($reg->comision, 0, '', ','),
+ 				"6"=>$reg->codigo,
+ 				"7"=>$reg->agenciaA,
+ 				"8"=>$reg->nomcompler,
+ 				"9"=>$reg->agenciaB,
+				"10"=>$reg->agentcreat,
+ 				"11"=>$reg->fecrea,
+ 				"12"=>($reg->estadot=='Pendiente')?'<span class="label bg-orange">'.$reg->estadot.'</span>':
  				'<span class="label bg-red">'.$reg->estadot.'</span>'
  				);
  		}
@@ -114,8 +255,8 @@ switch ($_GET["op"]){
 		require_once "../modelos/class_Envios_recibos.php";
 		$agencia = new Persona();
 
-		$rspta = $agencia->selectAgencias();
-
+		$rspta = $agencia->selectAgencias($_SESSION['pais'],$_SESSION['agencia_em'],$_SESSION['rol'],$_SESSION['ap']);
+					echo '<option value="">Elije agencia</option>';
 		while ($reg = $rspta->fetch_object())
 				{
 					echo '<option value=' . $reg->idagencia . '>' . $reg->nombre . '</option>';
@@ -132,7 +273,7 @@ switch ($_GET["op"]){
 				{
 					echo '<option value=' . $reg->idagencia . '>' . $reg->nombre . '</option>';
 				}
-	break;
+		break;
 
     case "selectAgenciaReceptora":
 	require_once "../modelos/class_Envios_recibos.php";
@@ -143,13 +284,21 @@ switch ($_GET["op"]){
 			  echo '<option value=' . $reg->idagencia . '>' . $reg->nombre . '</option>';
 		  }
     break;
-
+	
+	case 'traerSaldoActual':
+	      //Funcion para traer el saldo asincrono y poner en html
+		require_once "../modelos/class_Envios_recibos.php";
+		$traeSaldo = new Persona();
+		$rspta=$traeSaldo->traerSaldoActual($_SESSION['DNI'], $_SESSION['ncpCorriente']);
+ 		//Codificar el resultado utilizando json
+ 		echo json_encode($rspta);
+	break;
 
 	case 'buscarRemitenteRellenarNuevo':
 	      //echo $nomcompleto.":Donde este mi nombre";
 		require_once "../modelos/class_Envios_recibos.php";
 		$busqRell = new Persona();
-		$rspta=$busqRell->buscarRemitenteRellenarNuevo($nomcompleto);
+		$rspta=$busqRell->buscarRemitenteRellenarNuevo($DNIremitente);
  		//Codificar el resultado utilizando json
  		echo json_encode($rspta);
 	break;
@@ -158,15 +307,46 @@ switch ($_GET["op"]){
 	      //echo $nomcompler.":Donde esta mi nombre";
 		require_once "../modelos/class_Envios_recibos.php";
 		$busqRell = new Persona();
-		$rspta=$busqRell->buscarReceptorRellenarNuevo($nomcompler);
+		$rspta=$busqRell->buscarReceptorRellenarNuevo($telr);
  		//Codificar el resultado utilizando json
  		echo json_encode($rspta);
 	break;
 
+		case 'buscarEnvio':
+	      //echo $nomcompler.":Donde esta mi codigo";
+		require_once "../modelos/class_Envios_recibos.php";
+		$buscarCodigoEnvio = new Persona();
+		$rspta=$buscarCodigoEnvio->buscarEnvioClas($codigoB);
+ 		//Codificar el resultado utilizando json
+ 		echo json_encode($rspta);
+	break;
+
+	// Buscar el monto a cobrar si coincide
+		case 'verificarMontoCOBRAR':
+	      //echo $nomcompler.":Donde esta mi codigo";
+		require_once "../modelos/class_Envios_recibos.php";
+		$buscarMontoCobrar = new Persona();
+		$rspta=$buscarMontoCobrar->verificarMontoCOBRAR($codigoB,$cobrar);
+ 		//Codificar el resultado utilizando json
+		echo json_encode($rspta);
+	break;
+
+	// Buscar el CODIGO SECRETO
+	case 'verificarCodigoSECRETO':
+		//echo $nomcompler.":Donde esta mi codigo";
+	  require_once "../modelos/class_Envios_recibos.php";
+	  $buscarSECRETO= new Persona();
+	  $rspta=$buscarSECRETO->verificarCodigoSECRETO($codigoB,$secreto);
+	   //Codificar el resultado utilizando json
+	  echo json_encode($rspta);
+  break;
+	
+
+
 	case 'ponerComisiones':
 		require_once "../modelos/class_Envios_recibos.php";
 		$comision = new Persona();
-		$rspta=$comision->comisiones($monto);
+		$rspta=$comision->comisiones($monto, $pais_destino, $_SESSION['pais']);
  		//Codificar el resultado utilizando json
  		echo json_encode($rspta);
 	break;
@@ -185,10 +365,14 @@ switch ($_GET["op"]){
 		}
 		break;
 
+
+
 		////////////////////////////////////////// RECIBOS INICIO ////////////////////////////////////////////////////////////
 
 
 	case 'listarRecibos':
+
+
 		$rspta=$envio->listarRecibos($_SESSION['agencia_em']);
  		//Vamos a declarar un array
  		$data= Array();
@@ -196,19 +380,21 @@ switch ($_GET["op"]){
  		while ($reg=$rspta->fetch_object()){
  			$data[]=array(
  				"0"=>($reg->estadot=='Pendiente')?
- 					' <a title="Recibir" href="#" onclick="mostrar('.$reg->idtransaccion.',1)"><i class="fa fa-edit"></i></a>'.
- 					' <a title="Imprimir ticket" target="_blank" href="../reportes/exTicketRecibo.php?id='.$reg->idtransaccion.'" onclick="verTiket('.$reg->idtransaccion.')"><i class="fa fa-ticket"></i></a>':
+ 					' <a title="Recibir" href="#" onclick="mostrar('.$reg->idtransaccion.',1)"><i class="fa fa-edit"></i></a>'
+ 					//' <a title="Imprimir ticket" target="_blank" href="../reportes/exTicketRecibo.php?id='.$reg->idtransaccion.'" onclick="verTiket('.$reg->idtransaccion.')"><i class="fa fa-ticket"></i></a>'
+					:
  					' <a title="Recibido" href="#" onclick="mostrar('.$reg->idtransaccion.',0)"><i class="fa fa-edit"></i></a>'.
  					' <a title="Imprimir ticket" target="_blank" href="../reportes/exTicketRecibo.php?id='.$reg->idtransaccion.'" ><i class="fa fa-ticket"></i></a>',
  				"1"=>$reg->nomcompler,
  				"2"=>$reg->telr,
- 				"3"=>number_format($reg->monto, 0, '', '.'),
- 				"4"=>$reg->codigo,
- 				"5"=>$reg->agenciaB,
- 				"6"=>$reg->nomcompleto,
- 				"7"=>$reg->agenciaA,
- 				"8"=>$reg->fecrea,
- 				"9"=>($reg->estadot=='Pendiente')?'<span class="label bg-orange">'.$reg->estadot.'</span>':
+ 				"3"=>number_format($reg->monto, 0, '', ','),
+				"4"=>number_format($reg->cobrar, 0, '', ','),
+ 				"5"=>$reg->codigo,
+ 				"6"=>$reg->agenciaB,
+ 				"7"=>$reg->nomcompleto,
+ 				"8"=>$reg->agenciaA,
+ 				"9"=>$reg->fecrea,
+ 				"10"=>($reg->estadot=='Pendiente')?'<span class="label bg-orange">'.$reg->estadot.'</span>':
  				'<span class="label bg-green">'.$reg->estadot.'</span>'
  				);
  		}
@@ -221,13 +407,29 @@ switch ($_GET["op"]){
 
 	break;
 
-		case 'guardarRecibir':
 
-			$rspta=$envio->editarRecibir($idtransaccion,$idreceptor,$nombrereceptor,$comision,$_SESSION['agencia_em'],$telefonorec,$dirreceptor,$DNIreceptor,$descripcion,$_SESSION['ap'],$idbkhis);
-			echo $rspta ? "Envio recibido" : "Envio no se pudo recibir";
-			echo '<script> window.open("../reportes/exTicketRecibo.php?id='.$idtransaccion.'","_blank"); </script>';
 
-	    break;
+	case 'guardarRecibir':
+	
+// Verificar saldo PAGADOR, ESTE CODIGO ESTA EN ENVIAR TAMBIEN, tenemos que obtener los saldos de las NCP
+$respuestaAgente=$envio-> verificarSaldo($_SESSION['DNI'],$_SESSION['ap'], $_SESSION['ncpCorriente'], $_SESSION['ncpComisiones']);
+$regAgente = $respuestaAgente->fetch_object();
+$saldoNCPcorriente=intval($regAgente->saldoNCPcorriente);
+$saldoNCPcomisiones=intval($regAgente->saldoNCPcomisiones);
+$NCPcorriente=$regAgente->NCPcorriente;
+$NCPcomisiones=$regAgente->NCPcomisiones;
+// Operar saldos
+$saldoAgenPagoRestanteNCorri=(intval($saldoNCPcorriente) + intval($cobrar));
+$saldo_rescuenta=(intval($saldoNCPcorriente) + intval($cobrar));
+$saldoNCPcomisionesFINAL=(intval($saldoNCPcomisiones) + intval($comi_benef));
+
+		$rspta=$envio->editarRecibir($idtransaccion,$idreceptor,$nombrereceptor,$comision,$comi_benef,$cobrar,
+		$_SESSION['agencia_em'],$telefonorec,$dirreceptor,$DNIreceptor,$descripcion,$_SESSION['ap'],$idbkhis,
+		$NCPcorriente,$NCPcomisiones,$saldoAgenPagoRestanteNCorri,$saldoNCPcomisionesFINAL,$saldo_rescuenta);
+		echo $rspta ? "Envio recibido" : "Envio no se pudo recibir";
+		echo $rspta ? '<script> window.open("../reportes/exTicketRecibo.php?id='.$idtransaccion.'","_blank"); </script>' : 'Algo salio mal !!';
+
+	break;
 
 
 }

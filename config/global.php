@@ -15,5 +15,9 @@ define("DB_PASSWORD", "");
 define("DB_ENCODE","utf8");
 
 //Definimos una constante como nombre del proyecto
-define("PRO_NOMBRE","Mline");
+define("PRO_NOMBRE","appmlinemoney.com");
+
+// Definimos variable Twilio 
+define("TWILIO_ACCOUNT_SID","AC251135d13064c8c9acf7f9d0aac75a84");
+define("TWILIO_AUTH_TOKEN","ac64e48b71d43e9a7e0feb711134e285");
 ?>

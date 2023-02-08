@@ -11,7 +11,7 @@ Class Tasa
 	}
 
 	//Implementamos un método para insertar registros
-	public function insertar($pais_origen,$pais_destino,$Descripcion,$Monto1,$Monto2,$comisiont,$MontoKILO,$MontoSOBRE,$agente)
+	public function insertar($pais_origen,$pais_destino,$Descripcion,$Monto1,$Monto2,$MontoKILO,$MontoSOBRE,$comisiont,$agente)
 	{
 		
 		$sql="INSERT INTO tasas (`idTasas`, `pais_origen`, `pais_destino`, `Descripcion`,

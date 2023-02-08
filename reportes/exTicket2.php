@@ -16,11 +16,11 @@ $rspta = $ver->mostrarTicket2($_GET["id"]); // idtransaccion
  $reg = $rspta->fetch_object();
 
 //Establecemos los datos de la empresa
-$empresa = "Agencia de envios ECUATUR S.L.";
+$empresa = "Agencia de envios M_line S.L.";
 $documento = "2047776897";
-$direccion = "Rotonda, Cine Rial";
-$telefono = "+240 222 000400";
-$email = "ecuatursl@gmail.com";
+$direccion = "Santa Maria, An. E Venezuela";
+$telefono = "+240 222 XXXXXX";
+$email = "m_linemoney@gmail.com";
 
 ?>
 <div class="zona_impresion">
@@ -30,95 +30,56 @@ $email = "ecuatursl@gmail.com";
     <tr>
         <td align="center">
         <!-- Mostramos los datos de la empresa en el documento HTML -->
-        <h2><b>FORMULARIO DE ENVIO </b></h2>
-        ..:::::<strong> <?php echo $empresa; ?> </strong>:::::..<br>
-        <?php echo $documento.' - '.$email; ?><br>
-        <?php echo $direccion .' || '.$telefono; ?><br>
+        <span><img width="300" src="../public/dist/img/lgfactura.png" alt="Logo de factura m_line"></span>
+        <span><img width="80" src="../public/dist/img/contacto.jpg" alt="Logo de contacto m_line"></span>
+        <h2><b>Enviar dinero</b></h2>
+        <h3><b>Informacion de la transaccion</b></h3>
         </td>
     </tr>
     <tr>
-        <td align="center"><?php echo $reg->fecrea; ?></td>
-    </tr>
-    <tr>
-        <td align="center">-------------------------------------------------------------------------</td>
-    </tr>
-    <tr>
-      <td align="center"></td>
+        <td>
+          <b >Fecha de transaccion: <?php echo $reg->fecrea; ?></b><br><br>
+          <b >Numero de transaccion: <?php echo $reg->codigo; ?></b><br><br>
+          <b >Ciudad: <?php echo $reg->dirremitente; ?></b><br><br>
+          <b >Cantidad enviada: <?php echo number_format($reg->monto, 0, '', '.'); ?></b><br><br>
+          <b >Cantidad recibida: <?php echo number_format($reg->cobrar, 0, '', '.'); ?></b><br><br>
+          <b >Comision: <?php echo number_format($reg->comision, 0, '', '.');; ?></b><br><br>
+          <b >Moneda: FCFA</b>
+      </td>
     </tr>
     <tr>
         <!-- Mostramos los datos del remitente en el documento HTML -->
-        <td><b>Remitente:</b> <?php echo $reg->nombreremitente; ?></td>
+        <td align="center"><h3><b>Remitente</b></h3></td>
     </tr>
     <tr>
-        <td>Tel:<?php echo $reg->telefonorem." - DIP: ".$reg->DNIremitente; ?></td>
+        <td>
+          <b>Nombre: <?php echo $reg->nombreremitente; ?></b><br><br>
+          <b>Telefono: <?php echo $reg->telefonorem; ?></b><br><br>
+          <b>DIP: <?php echo $reg->DNIremitente; ?></b><br>
+        </td>
     </tr>
     <tr>
-        <td>Dirección: <?php echo $reg->dirremitente; ?><br></td>
+        <!-- Mostramos los datos del remitente en el documento HTML -->
+        <td align="center"><h3><b>Beneficiario</b></h3></td>
     </tr>
     <tr>
-        <td align="center">&nbsp;</td>
-    </tr>
-    <tr>
-        <!-- Mostramos los datos del receptor en el documento HTML -->
-        <td><b>Receptor:</b> <?php echo $reg->nombrereceptor; ?></td>
-    </tr>
-    <tr>
-        <td>Tel:<?php echo $reg->telefonorec." - DIP: ".$reg->DNIreceptor; ?></td>
-    </tr>
-    <tr>
-        <td>Dirección: <?php echo $reg->dirreceptor; ?></td>
-    </tr>    
+        <td>
+          <b>Nombre: <?php echo $reg->nombrereceptor; ?></b><br><br>
+          <b>Telefono: <?php echo $reg->telefonorec; ?></b><br><br>
+          <b>Puesto: <?php echo $reg->agenciaA; ?></b><br><br>
+          <b>Agente: <?php echo $reg->agentcreat; ?></b><br>
+        </td>
+    </tr>  
 </table>
 </br>
 <!-- Mostramos los detalles de la venta en el documento HTML -->
 <table border="0" align="center" width="300px">
+     
     <tr>
-        <td>MONTO ENVIO</td>
-        <td>COMISION</td>
-        <td align="right">CODIGO</td>
+      <td colspan="3" align="center">¡Gracias por su envio!<br>M_line S.A.<br>Guinea Ecuatorial - <?php echo $reg->agenciaA; ?></td>
     </tr>
-    <tr>
-      <td colspan="3">==========================================</td>
-    </tr>
-    <tr>
-        <td><b><?php echo number_format($reg->monto, 0, '', '.'); ?></b></td>
-        <td><?php echo $reg->comision; ?></td>
-        <td align='right'><?php echo $reg->codigo; ?></td>
-    </tr>
-    <!-- Mostramos los totales del envio en el documento HTML -->
-    <tr>
-      <td colspan="3">Descripcion: <?php echo $reg->descripcion; ?></td>
-    </tr>
-<!--     <tr>
-        <td>Agencias:</td>
-        <td align="right">De <?php echo $reg->agenciaA; ?></td>
-        <td align="right"> A <?php echo $reg->agenciaB; ?></b></td>
-    </tr> -->
-    <tr>
-      <td><b>EL CLIENTE</b></td>
-      <td>&nbsp;</td>
-      <td><b>EL AGENTE: <?php echo $reg->agentcreat; ?></b></td>
-    </tr>
-    <tr>
-      <td colspan="3">&nbsp;</td>
-    </tr> 
-    <tr>
-      <td colspan="3">&nbsp;</td>
-    </tr>      
-    <tr>
-      <td colspan="3" align="center">¡Gracias por su envio!</td>
-    </tr>
-    <tr>
-      <td colspan="3" align="center">Ecuatur S.L.</td>
-    </tr>
-    <tr>
-      <td colspan="3" align="center">Guinea Ecuatorial - <?php echo $reg->agenciaA; ?></td>
-    </tr>
-    
 </table>
-<br>
 </div>
-<p>&nbsp;</p>
 
 </body>
 </html>

@@ -18,7 +18,7 @@ if ($_SESSION['envios']==1)
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Realizar envio
+        Enviar efectivo
         <small><button class="btn btn-success" id="btnagregar" onclick="mostrarform(true)"><i class="fa fa-plus-circle"></i> Agregar</button></small>
       </h1>
     </section>
@@ -33,11 +33,13 @@ if ($_SESSION['envios']==1)
                             <th>Remitente</th>
                             <th>Telefono</th>
                             <th>Monto</th>
+                            <th>Cobrar</th>
                             <th>Comision</th> <!-- <th>Descripcion</th> si es un paquete -->
                             <th>Codigo</th>
                             <th>Agencia Emisora</th>
                             <th>Para</th>
                             <th>Agencia Receptora</th>
+                            <th>Agente</th>
                             <th>Fecha</th>
                             <th>Estado</th>
                           </thead>
@@ -48,11 +50,13 @@ if ($_SESSION['envios']==1)
                             <th>Remitente</th>
                             <th>Telefono</th>
                             <th>Monto</th>
+                            <th>Cobrar</th>
                             <th>Comision</th> <!-- <th>Descripcion</th> si es un paquete -->
                             <th>Codigo</th>
                             <th>Agencia Emisora</th>
                             <th>Para</th>
                             <th>Agencia Receptora</th>
+                            <th>Agente</th>
                             <th>Fecha</th>
                             <th>Estado</th>
                           </tfoot>
@@ -61,71 +65,83 @@ if ($_SESSION['envios']==1)
 
                     <div class="panel-body" style="height: 400px;" id="formularioregistros">
                         <form name="formulario" id="formulario" method="POST">
+                        <div class="form-group col-lg-3 col-md3 col-sm-3 col-xs-12">
+                            <label>Pais de destino:</label>
+                            <select  class="form-control selectpicker" data-live-search="true" name="pais_destino" id="pais_destino" required>
+                            </select>
+                         </div>
+                         <div class="form-group col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <label>Numero DIP Remitente:</label>
+                            <input type="text" class="form-control" onmouseout="buscarRemitenteRellenarNuevo(this.value)" name="DNIremitente" id="DNIremitente" maxlength="10" minlength="6" placeholder="DNI del remitente" required>
+                          </div>
+                          
+                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label>Telefono receptor:</label>
+                            <input type="text" class="form-control" onmouseout="buscarReceptorRellenarNuevo(this.value)" name="telefonorec" id="telefonorec" minlength="9" maxlength="10" placeholder="Telefono del receptor" required>
+                          </div>  
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Nombre Remitente:<span class="label label-success" id="nombreSINO"></span> </label>
                             <input type="hidden" name="idtransaccion" id="idtransaccion">
                             <input type="hidden" name="idreceptor" id="idreceptor">
                             <input type="hidden" name="existeR" id="existeR">
                             <input type="hidden" name="existeC" id="existeC">
+                            <input type="hidden" name="referenciaAc" id="referenciaAc">
                             <input type="hidden" name="codigoAc" id="codigoAc">
-                            <input type="text" onkeydown="buscarRemitenteRellenarNuevo(this.value)" class="form-control" name="nombreremitente" id="nombreremitente" maxlength="100" placeholder="Nombre del remitente" required>
+                            <input type="hidden" name="saldo" id="saldo">
+                            <input type="text"  class="form-control" name="nombreremitente" id="nombreremitente" maxlength="100" placeholder="Nombre del remitente" required>
                           </div>
+                          
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Nombre Receptor:<span class="label label-success" id="nombreRSINO"></span> </label>
-                            <input type="text" onkeydown="buscarReceptorRellenarNuevo(this.value)" class="form-control" name="nombrereceptor" id="nombrereceptor" maxlength="100" placeholder="Nombre del receptor" required>
+                            <input type="text"  class="form-control" name="nombrereceptor" id="nombrereceptor" maxlength="100" placeholder="Nombre del receptor" required>
                           </div>
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <label>Telefono:</label>
-                            <input type="text" class="form-control" name="telefonorem" id="telefonorem" maxlength="22" placeholder="Telefono del remitente" required>
+                            <label>Telefono remitente:</label>
+                            <input type="text" class="form-control" name="telefonorem" id="telefonorem" maxlength="10" minlength="9" placeholder="Telefono del remitente" required>
                           </div>
-                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <label>Telefono:</label>
-                            <input type="text" class="form-control" name="telefonorec" id="telefonorec" maxlength="22" placeholder="Telefono del receptor" required>
-                          </div>
-                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <label>Dirección:</label>
-                            <input type="text" class="form-control" name="dirremitente" id="dirremitente" maxlength="45" placeholder="Direccion del remitente" required>
-                          </div>
-                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <label>Dirección:</label>
+                          <div class="form-group col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <label>Dirección receptor:</label>
                             <input type="text" class="form-control" name="dirreceptor" id="dirreceptor" maxlength="45" placeholder="Direccion del receptor" required>
                           </div>
-                          <div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                            <label>DNI Remitente:</label>
-                            <input type="text" class="form-control" name="DNIremitente" id="DNIremitente" maxlength="10" placeholder="DNI del remitente" required>
+                          <div class="form-group col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <label>Codigo secreto:</label>
+                            <input type="number" class="form-control" name="secreto" id="secreto" maxlength="45" placeholder="Codigo secreto" required>
                           </div>
-                          <div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label>Dirección remitente:</label>
+                            <input type="text" class="form-control" name="dirremitente" id="dirremitente" maxlength="45" placeholder="Direccion del remitente" required>
+                          </div>
+
+                          <div class="form-group col-lg-3 col-md-3 col-sm-3 col-xs-12">
                             <label>Tipo transaccion:</label>
                             <select class="form-control selectpicker" name="tipo" id="tipo" required>
                               <option value="1">Divisas</option>
                               <option value="2">Paquete</option>
                             </select>
                           </div>
-                          <div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                            <label>Monto:</label>
-                            <input  onmouseout="comisiones(this.value)" type="number" class="form-control" name="monto" id="monto" min="2000" maxlength="9" placeholder="Monto de envio">
-                          </div>
                           <div class="form-group col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                            <label>Comisión:</label>
+                            <label>Monto:</label>
+                            <input  onmouseout="comisiones(), traerSaldoActual(), verficarSaldo(this.value)" type="number" class="form-control" name="monto" id="monto" min="2000" max="1000000" maxlength="9" placeholder="Monto de envio">
+                          </div>
+                          <div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                            <label>Comisión envio:</label>
                             <input type="text" readonly="" class="form-control" name="comision" id="comision" maxlength="20" placeholder="Comisión de envio">
                           </div>
-                           <div class="form-group col-lg-3 col-md-3 col-sm-3 col-xs-12" > 
-                            <label>DNI Receptor:</label>
-                            <input type="text" class="form-control" onkeypress="verificarDNI()" name="DNIreceptor" id="DNIreceptor" maxlength="10" placeholder="DNI del receptor" required>
+                          <div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                            <label>Comisión caja:</label>
+                            <input type="text" readonly="" class="form-control" name="comi_remi" id="comi_remi" maxlength="20" placeholder="Comisión de caja" readonly>
                           </div>
                           <div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                            <label>Agencia Emisora:</label>
-                            <select class="form-control selectpicker" data-live-search="true" name="agenciaA" id="agenciaA" required>
-                            </select>
+                            <label>IVA:</label>
+                            <input type="text" readonly="" class="form-control" name="IVA" id="IVA" maxlength="20" placeholder="IVA" readonly>
+                          </div>
+                          <div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                            <label>A COBRAR:</label>
+                            <input type="text" readonly="" class="form-control" name="aCobrar" id="aCobrar" maxlength="20" placeholder="Cobrar" readonly>
                           </div>
                           <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
-                            <label>Agencia Receptora:</label>
-                            <select class="form-control selectpicker" data-live-search="true" name="agenciaB" id="agenciaB" required>
-                            </select>
-                          </div>
-                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Descripción:</label>
-                            <input type="text" class="form-control" name="descripcion" id="descripcion" maxlength="45" placeholder="Descripción del paquete">
+                            <input type="text" class="form-control" name="descripcion" id="descripcion" maxlength="45" placeholder="Descripción si es un paquete">
                           </div>
                           <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-envelope"></i> Enviar </button>
