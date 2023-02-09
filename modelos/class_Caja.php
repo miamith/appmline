@@ -136,8 +136,6 @@ Class Caja
 	}
 
 // Buscar Cuentas del cajero
-
-
     //Implementar un método para filtar 
 	public function ponerNCPCajero($cajero)
 	{

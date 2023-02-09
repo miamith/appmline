@@ -63,7 +63,7 @@ if ($_SESSION['banco_comercial']==1)
                         <form name="formulario" id="formulario" method="POST">
                         <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
-                        <?php if($_SESSION['rol'] !='Agencia') { // VALIDACION DE ROLES ?>
+                        <?php if($_SESSION['rol'] !='Administrador') { // VALIDACION DE ROLES ?>
                                     <button onmouseout="generarCuentaBancoComercial()" class="btn btn-success" type="submit" id="btnGuardar"><i class="fa fa-save"></i> Guardar</button>
                                     <button class="btn bg-navy" type="button" id="btnDebitar" onclick="MODALOperarBancoComercial()"> <i class="fa fa-minus-square"></i> <i class="fa fa-reply-all"> </i> C-D UV Comercial <i class="fa fa-plus-square"> </i></button>
                        <?php  } ?>
