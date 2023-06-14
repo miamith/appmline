@@ -135,6 +135,13 @@ switch ($_GET["op"]){
 
 	break;
 
+	/// Popular agecia del cliente automaticamente
+	case 'ponerAgenciaCliente':
+		$rspta=$caja->ponerAgenciaCliente($cliente);
+ 		//Codificar el resultado utilizando json
+ 		echo json_encode($rspta);
+	break;
+
     
     case 'ponerNCPclienteRemitente':
 		$rspta=$caja->buscarNCPcliente($clienteremitente, $tipo);

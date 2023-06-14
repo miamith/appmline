@@ -50,6 +50,21 @@ function init() {
 
 }
 
+// Poner agencia del cliente selecionado
+function ponerAgenciaCliente() {
+    var cliente = $("#cliente").val();
+    $.post("../ajax/ajax_cajas.php?op=ponerAgenciaCliente", { cliente: cliente }, function(data, status) {
+        data = JSON.parse(data);
+        console.log(data);
+
+        if (data) {
+            $('#agencia').val(data.agencia_em);
+            $('#agencia').selectpicker('refresh');
+        }
+
+    });
+}
+
 
 function ponerNCPclienteRemitente() {
     var clienteremitente = $("#clienteremitente").val();

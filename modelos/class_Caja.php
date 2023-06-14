@@ -102,6 +102,15 @@ Class Caja
 	}
 
 
+    
+    		//Implementar un método para poner agencia del cliente
+	public function ponerAgenciaCliente($cliente)
+	{
+		$sql="SELECT idempleado,DNI, agencia_em FROM empleados WHERE DNI='$cliente'";
+		return ejecutarConsultaSimpleFila($sql);		
+	}
+
+
       //Implementar un método PARA PONER SALDOS EN EL HEADER Y EN LOS INPUTS DEL FORMULARIO DEL HERADER
 	public function ponerNCPySaldo($agente)
 	{

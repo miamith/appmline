@@ -104,7 +104,7 @@ Class Cuenta
     		//Implementar un método para listar los registros y mostrar en el select
 	public function selectEmpleado()
 	{
-		$sql="SELECT idempleado,ap,DNI,(select nomcompleto from clientes r WHERE r.DNIremitente=DNI) as nomcompleto FROM empleados";
+		$sql="SELECT idempleado,ap,DNI, agencia_em, (select nomcompleto from clientes r WHERE r.DNIremitente=DNI) as nomcompleto FROM empleados";
 		return ejecutarConsulta($sql);		
 	}
 

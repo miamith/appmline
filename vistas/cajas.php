@@ -79,7 +79,7 @@ if ($_SESSION['cajas']==1)
                             
                              <div class="form-group col-lg-4 col-md-4 col-sm-4 col-xs-12">
                                 <label>Nombre del GERENTE (*) :</label>
-                                <select  class="form-control selectpicker" data-live-search="true" name="cliente" id="cliente" required>
+                                <select onchange="ponerAgenciaCliente()"  class="form-control selectpicker" data-live-search="true" name="cliente" id="cliente" required>
                                 </select>
                                 <input type="hidden" name="idCaja" id="idCaja">
                              </div>
